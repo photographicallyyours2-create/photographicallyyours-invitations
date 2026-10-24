@@ -13,11 +13,19 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./py-logo.png" />
 
-    <!-- Path normalizer for GitHub Pages -->
+    <!-- Path normalizer for GitHub Pages & Direct Subpaths -->
     <script>
       (function() {
-        if (location.pathname === '/photographicallyyours-invitations') {
-          location.replace('/photographicallyyours-invitations/' + location.hash);
+        var base = '/photographicallyyours-invitations';
+        var path = location.pathname;
+        if (path.indexOf(base) === 0) {
+          var sub = path.slice(base.length);
+          if (sub.length > 1 && !location.hash) {
+            // Converts direct links like /photographicallyyours/sahil-kajal to /#/photographicallyyours/sahil-kajal
+            location.replace(base + '/#' + sub + location.search);
+          } else if (path === base) {
+            location.replace(base + '/' + (location.hash || ''));
+          }
         }
       })();
     </script>

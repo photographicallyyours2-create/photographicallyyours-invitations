@@ -38,6 +38,8 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
+  const [isQuickEditOpen, setIsQuickEditOpen] = useState(false);
+  const [quickSaved, setQuickSaved] = useState(false);
 
   const handleScrollDown = () => {
     contentRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,9 +48,6 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
   const handleScrollToEvents = () => {
     eventsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const [isQuickEditOpen, setIsQuickEditOpen] = useState(false);
-  const [quickSaved, setQuickSaved] = useState(false);
 
   const handleFieldChange = (field: keyof WeddingData, value: string) => {
     if (onUpdateData) {

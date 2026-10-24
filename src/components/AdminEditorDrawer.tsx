@@ -83,6 +83,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   const [dragOverPhotoIndex, setDragOverPhotoIndex] = useState<number | null>(null);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
   const backupFileInputRef = React.useRef<HTMLInputElement>(null);
+  const drawerFileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Sync internal form data when incoming data changes
   useEffect(() => {
@@ -192,8 +193,6 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
       return updated;
     });
   };
-
-  const drawerFileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFilesDropInDrawer = (files: FileList | File[]) => {
     const imageFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
@@ -718,6 +717,34 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
                       type="text"
                       value={formData.parentsGroom}
                       onChange={(e) => handleGeneralChange('parentsGroom', e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg border border-gold-300 bg-white text-charcoal-800 text-base sm:text-xs focus:ring-1 focus:ring-gold-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block uppercase tracking-wider text-charcoal-800 font-semibold mb-1">
+                      Grandparents &amp; Lineage
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.grandparentsGroom || ''}
+                      onChange={(e) => handleGeneralChange('grandparentsGroom', e.target.value)}
+                      placeholder="Grand S/o Late Smt. Raj Kumari & Late Sh. Vishnu Bhagwan"
+                      className="w-full px-3 py-2 rounded-lg border border-gold-300 bg-white text-charcoal-800 text-base sm:text-xs focus:ring-1 focus:ring-gold-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-charcoal-800 font-semibold mb-1">
+                      Residence Address
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.residenceAddress || ''}
+                      onChange={(e) => handleGeneralChange('residenceAddress', e.target.value)}
+                      placeholder="H. No.- C-96, Moti Nagar, New Delhi-110015"
                       className="w-full px-3 py-2 rounded-lg border border-gold-300 bg-white text-charcoal-800 text-base sm:text-xs focus:ring-1 focus:ring-gold-500"
                     />
                   </div>

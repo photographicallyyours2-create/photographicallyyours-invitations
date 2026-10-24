@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Photographically Yours — Wedding Invitations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Single Page Application routing for GitHub Pages
+      (function() {
+        var pathSegmentsToKeep = 1; // 1 segment for repository: /photographicallyyours-invitations
+        var l = window.location;
+        var pathname = l.pathname;
+        
+        // Find segment after repo base
+        var repoName = '/photographicallyyours-invitations';
+        var subPath = '';
+        if (pathname.indexOf(repoName) === 0) {
+          subPath = pathname.slice(repoName.length);
+        } else {
+          subPath = pathname;
+        }
+
+        // Clean up subPath
+        if (subPath.charAt(0) === '/') {
+          subPath = subPath.slice(1);
+        }
+
+        // If client requested sahil-kajal directly
+        if (!subPath || subPath === '') {
+          subPath = 'photographicallyyours/sahil-kajal';
+        }
+
+        var redirectUrl = (pathname.indexOf(repoName) === 0 ? repoName : '') +
+          '/#' + (subPath.charAt(0) === '/' ? '' : '/') + subPath +
+          (l.search ? l.search : '') +
+          (l.hash ? l.hash : '');
+
+        window.location.replace(redirectUrl);
+      })();
+    </script>
+    <style>
+      body {
+        font-family: 'Cinzel', serif, system-ui;
+        background: #FDFBF7;
+        color: #2C381F;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+      }
+      .loader {
+        border: 3px solid #E2D4B7;
+        border-top: 3px solid #C29B38;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader"></div>
+    <p>Opening Wedding Invitation...</p>
+  </body>
+</html>

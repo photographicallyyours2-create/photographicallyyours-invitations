@@ -98,13 +98,11 @@ export function App() {
       const rawHash = window.location.hash || '#/';
       const decodedHash = decodeURIComponent(rawHash).toLowerCase().trim();
 
-      // Clean Client Routes (e.g. #/photographicallyyours/sahil&kajal, #/photographicallyyours/sahil-kajal, #/sahil-kajal)
+      // Clean Client Routes (e.g. #/photographicallyyours/sahil&kajal, #/photographicallyyours/sahil-kajal, #/sahil-kajal, #/sahil, #/kajal)
       if (
         decodedHash.includes('photographicallyyours/sahil') ||
-        decodedHash.includes('sahil&kajal') ||
-        decodedHash.includes('sahil-kajal') ||
-        decodedHash.includes('sahil-and-kajal') ||
-        decodedHash === '#/sahil'
+        decodedHash.includes('sahil') ||
+        decodedHash.includes('kajal')
       ) {
         setActiveTemplateId('bodh-heritage');
         setCurrentView('template');
