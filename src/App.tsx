@@ -32,10 +32,9 @@ import { PastelCourtyardTemplate } from './templates/PastelCourtyardTemplate';
 import { AudioPlayer } from './components/AudioPlayer';
 import { AdminEditorDrawer } from './components/AdminEditorDrawer';
 import { RoyalEnvelopeExperience } from './components/RoyalEnvelopeExperience';
+import { loadAllFromIndexedDB, persistWeddingData, PY_STORAGE_KEY } from './utils/storage';
 
 type AppView = 'home' | 'catalogue' | 'template-detail' | 'template' | 'enquire';
-
-const PY_STORAGE_KEY = 'photographicallyyours_wedding_data_v1';
 
 const loadSavedData = (): Record<string, WeddingData> => {
   try {
@@ -50,13 +49,25 @@ const loadSavedData = (): Record<string, WeddingData> => {
 };
 
 export function App() {
-  // Store customized data per template ID in localStorage so edits persist across reloads and tab closes
+  // Store customized data per template ID in state (hydrated by IndexedDB & localStorage)
   const [customizedData, setCustomizedData] = useState<Record<string, WeddingData>>(loadSavedData);
   const [currentView, setCurrentView] = useState<AppView>('home');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('royal-heirloom');
   const [enquiryTemplateId, setEnquiryTemplateId] = useState<string>('royal-heirloom');
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
+
+  // Hydrate permanently saved photos & data from IndexedDB on startup
+  useEffect(() => {
+    loadAllFromIndexedDB().then((indexedData) => {
+      if (indexedData && Object.keys(indexedData).length > 0) {
+        setCustomizedData((prev) => ({
+          ...prev,
+          ...indexedData,
+        }));
+      }
+    });
+  }, []);
 
   const getActiveWeddingData = (): WeddingData => {
     const raw = customizedData[activeTemplateId];
@@ -84,11 +95,8 @@ export function App() {
       if (activeTemplateId === 'bodh-heritage' || newData.brideName === 'Kajal' || newData.groomName === 'Sahil') {
         updated['bodh-heritage'] = newData;
       }
-      try {
-        localStorage.setItem(PY_STORAGE_KEY, JSON.stringify(updated));
-      } catch (e) {
-        console.warn('Failed to save wedding data to localStorage:', e);
-      }
+      // Save permanently to both IndexedDB (unlimited) and localStorage
+      persistWeddingData(activeTemplateId, newData, updated);
       return updated;
     });
   };

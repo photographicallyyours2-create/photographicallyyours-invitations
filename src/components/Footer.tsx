@@ -76,8 +76,8 @@ export const Footer: React.FC<FooterProps> = ({ data, onOpenAdmin, onScrollToTop
                 (e.currentTarget as HTMLImageElement).src = '/py-logo.png';
               }}
             />
-            <span className="font-serif font-bold text-gold-200 tracking-wider">
-              Created by Photographically Yours, 2026
+            <span className="font-sans text-[11px] text-cream-200/55 tracking-widest uppercase">
+              created by Photographically Yours 2026
             </span>
           </div>
 

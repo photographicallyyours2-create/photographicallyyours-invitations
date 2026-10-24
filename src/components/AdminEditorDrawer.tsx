@@ -22,6 +22,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { RoyalDivider } from './JaaliDecor';
+import { compressImageFile, persistWeddingData, PY_STORAGE_KEY } from '../utils/storage';
 
 interface AdminEditorDrawerProps {
   isOpen: boolean;
@@ -194,30 +195,44 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
     });
   };
 
-  const handleFilesDropInDrawer = (files: FileList | File[]) => {
+  const handleFilesDropInDrawer = async (files: FileList | File[]) => {
     const imageFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
     if (imageFiles.length === 0) return;
-    imageFiles.forEach((file, idx) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        if (!result) return;
+
+    setFeedbackMessage(`Compressing & optimizing ${imageFiles.length} photo${imageFiles.length > 1 ? 's' : ''}...`);
+    setShowSavedFeedback(true);
+
+    const addedPhotos: GalleryPhoto[] = [];
+    for (let idx = 0; idx < imageFiles.length; idx++) {
+      const file = imageFiles[idx];
+      try {
+        const compressed = await compressImageFile(file, 1400, 0.82);
         const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-        const newPhoto: GalleryPhoto = {
+        addedPhotos.push({
           id: `photo-drawer-${Date.now()}-${idx}`,
-          src: result,
+          src: compressed,
           alt: cleanName,
           caption: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
           location: formData.venueCity || 'Wedding Gallery',
           spanClass: 'md:col-span-1 md:row-span-1',
-        };
-        setFormData((prev) => ({
+        });
+      } catch (err) {
+        console.warn('Failed compressing drawer image:', err);
+      }
+    }
+
+    if (addedPhotos.length > 0) {
+      setFormData((prev) => {
+        const updated = {
           ...prev,
-          gallery: [...prev.gallery, newPhoto].slice(0, 10),
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+          gallery: [...prev.gallery, ...addedPhotos].slice(0, 10),
+        };
+        onUpdateData(updated);
+        return updated;
+      });
+      setFeedbackMessage(`✓ Added & saved ${addedPhotos.length} photo${addedPhotos.length > 1 ? 's' : ''} to gallery!`);
+      setTimeout(() => setShowSavedFeedback(false), 3000);
+    }
   };
 
   const handleMovePhoto = (idx: number, direction: 'up' | 'down') => {
@@ -259,22 +274,22 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const imageFile = Array.from(e.dataTransfer.files).find((f) => f.type.startsWith('image/'));
       if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const res = ev.target?.result as string;
-          if (!res) return;
-          setFormData((prev) => {
-            const updatedGallery = [...(prev.gallery || [])];
-            updatedGallery[targetIndex] = { ...updatedGallery[targetIndex], src: res };
-            const updated = { ...prev, gallery: updatedGallery };
-            onUpdateData(updated);
-            return updated;
+        compressImageFile(imageFile, 1400, 0.82)
+          .then((compressedRes) => {
+            setFormData((prev) => {
+              const updatedGallery = [...(prev.gallery || [])];
+              updatedGallery[targetIndex] = { ...updatedGallery[targetIndex], src: compressedRes };
+              const updated = { ...prev, gallery: updatedGallery };
+              onUpdateData(updated);
+              return updated;
+            });
+            setFeedbackMessage(`✓ Photo #${targetIndex + 1} updated & compressed!`);
+            setShowSavedFeedback(true);
+            setTimeout(() => setShowSavedFeedback(false), 3000);
+          })
+          .catch((err) => {
+            console.warn('Failed compressing dropped card photo:', err);
           });
-          setFeedbackMessage(`✓ Photo #${targetIndex + 1} updated with uploaded image!`);
-          setShowSavedFeedback(true);
-          setTimeout(() => setShowSavedFeedback(false), 3000);
-        };
-        reader.readAsDataURL(imageFile);
         return;
       }
     }
@@ -365,20 +380,19 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   const handleSave = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     onUpdateData(formData);
-    // Explicitly write to localStorage under PY key to guarantee permanent persistence
+    // Explicitly write to IndexedDB & localStorage to guarantee permanent persistence
     try {
-      const PY_STORAGE_KEY = 'photographicallyyours_wedding_data_v1';
       const existing = localStorage.getItem(PY_STORAGE_KEY);
       const parsed = existing ? JSON.parse(existing) : {};
       parsed[activeTemplateId] = formData;
       if (formData.brideName === 'Kajal' || formData.groomName === 'Sahil') {
         parsed['bodh-heritage'] = formData;
       }
-      localStorage.setItem(PY_STORAGE_KEY, JSON.stringify(parsed));
+      persistWeddingData(activeTemplateId, formData, parsed);
     } catch (err) {
-      console.warn('Error saving to localStorage:', err);
+      console.warn('Error persisting data:', err);
     }
-    setFeedbackMessage('✓ Changes Saved Permanently! Your gallery order, texts, and events will remain saved even after refreshing.');
+    setFeedbackMessage('✓ Changes Saved Permanently! Your gallery order, photos, texts, and events will remain saved even after refreshing.');
     setShowSavedFeedback(true);
     setTimeout(() => setShowSavedFeedback(false), 4000);
   };

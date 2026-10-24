@@ -41,8 +41,8 @@ export const StudioHomePage: React.FC<StudioHomePageProps> = ({
           {/* Top Atelier Badge */}
           <div className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-cream-50 border border-gold-400 shadow-xs text-[10px] sm:text-xs font-serif tracking-[0.15em] sm:tracking-[0.25em] text-burgundy-900 uppercase mb-4 sm:mb-6 animate-fade-in">
             <Sparkles className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
-            <span className="hidden sm:inline">Created by Photographically Yours, 2026 • Royal Wedding Stationery</span>
-            <span className="sm:hidden">Created by Photographically Yours, 2026</span>
+            <span className="hidden sm:inline">The Atelier • Bespoke Royal Wedding Stationery</span>
+            <span className="sm:hidden">The Atelier • Bespoke Stationery</span>
             <Sparkles className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
           </div>
 

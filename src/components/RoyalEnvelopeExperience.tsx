@@ -96,6 +96,12 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
   const sealColor = isOlive
     ? 'bg-gradient-to-br from-[#8C2333] via-[#65101C] to-[#3B070F]'
     : 'bg-gradient-to-br from-[#A52033] via-[#7B1222] to-[#480A13]';
+  const backdropGradient = isOlive
+    ? 'bg-gradient-to-b from-[#0F160C]/96 via-[#1A2614]/96 to-[#0A1008]/98'
+    : 'bg-gradient-to-b from-[#14080D]/96 via-[#230C16]/96 to-[#0F050A]/98';
+  const flapGradient = isOlive
+    ? 'bg-gradient-to-b from-[#182212] via-[#2A371F] to-transparent'
+    : 'bg-gradient-to-b from-[#320811] via-[#4A0D1A] to-transparent';
 
   // Floating button to re-live the envelope opening after it has dissolved
   if (animationPhase === 'opened') {
@@ -103,7 +109,9 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
       <div className="fixed bottom-20 left-4 z-40">
         <button
           onClick={handleReopen}
-          className="group px-4 py-2 rounded-full bg-burgundy-950/90 text-gold-200 border border-gold-400/60 shadow-royal hover:scale-105 active:scale-95 transition-all text-xs font-serif flex items-center space-x-2 backdrop-blur-md cursor-pointer"
+          className={`group px-4 py-2 rounded-full ${
+            isOlive ? 'bg-[#25301B]/95 text-gold-200 border-[#C29B38]/60' : 'bg-burgundy-950/90 text-gold-200 border-gold-400/60'
+          } border shadow-royal hover:scale-105 active:scale-95 transition-all text-xs font-serif flex items-center space-x-2 backdrop-blur-md cursor-pointer`}
           title="Experience Royal Envelope Opening Again"
         >
           <span className="text-base group-hover:rotate-12 transition-transform">✉</span>
@@ -125,7 +133,7 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
         isDissolving
           ? 'opacity-0 scale-110 blur-xl pointer-events-none'
           : 'opacity-100 scale-100 blur-0'
-      } bg-gradient-to-b from-[#14080D]/95 via-[#230C16]/95 to-[#0F050A]/98 backdrop-blur-xl`}
+      } ${backdropGradient} backdrop-blur-xl`}
     >
       {/* Ambient Starlight & Floating Golden Particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -134,18 +142,6 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
         <div className="absolute top-1/3 right-8 text-gold-400/25 text-sm animate-float [animation-delay:1.5s]">✦</div>
         <div className="absolute bottom-20 left-12 text-gold-400/20 text-base animate-float [animation-delay:2.5s]">✦</div>
         <div className="absolute bottom-12 right-12 text-gold-400/30 text-xl animate-float [animation-delay:1s]">✦</div>
-      </div>
-
-      {/* Top Brand Monogram & Created By Notice */}
-      <div className="absolute top-3 sm:top-5 inset-x-0 flex flex-col items-center justify-center text-center pointer-events-none z-20 px-4">
-        <div className="flex items-center space-x-2 text-[10px] sm:text-xs font-serif uppercase tracking-[0.25em] text-gold-300/90 font-medium">
-          <Sparkles className="w-3 h-3 text-gold-400" />
-          <span>Created by Photographically Yours, 2026</span>
-          <Sparkles className="w-3 h-3 text-gold-400" />
-        </div>
-        <p className="text-[9px] sm:text-[10px] text-cream-200/50 uppercase tracking-[0.2em] font-sans mt-0.5">
-          Royal Wedding Postal Dispatch • Tap Envelope to Unseal
-        </p>
       </div>
 
       {/* Main Royal Envelope Card Frame (Optimized for Mobile Touch) */}
@@ -250,14 +246,14 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
           </div>
 
           {/* Bottom Dispatch Hallmark & Created By Notice */}
-          <div className="relative z-10 pt-2 pb-1 border-t border-gold-400/30 flex flex-col items-center space-y-1">
-            <div className="flex items-center justify-center space-x-2 text-[9px] sm:text-[10px] text-gold-200/90 font-serif tracking-wider uppercase">
+          <div className="relative z-10 pt-2 pb-1 border-t border-gold-400/30 flex flex-col items-center space-y-0.5">
+            <div className="flex items-center justify-center space-x-2 text-[9px] sm:text-[10px] text-gold-200/90 font-sans tracking-widest uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-gold-400 inline-block" />
-              <span>Photographically Yours • Royal Dispatch</span>
+              <span>Official Wedding Dispatch • Royal Post</span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-400 inline-block" />
             </div>
-            <p className="text-[9px] text-cream-200/50 font-sans tracking-widest">
-              Created by Photographically Yours, 2026
+            <p className="font-sans text-[10px] text-cream-200/50 uppercase tracking-[0.16em]">
+              created by Photographically Yours 2026
             </p>
           </div>
 
@@ -268,7 +264,7 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
               transform: isFlapOpen ? 'rotateX(170deg) translateY(-8px)' : 'rotateX(0deg)',
               transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
-            className="absolute top-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-b from-[#320811] via-[#4A0D1A] to-transparent pointer-events-none rounded-t-2xl sm:rounded-t-3xl border-t border-gold-400/60 z-30"
+            className={`absolute top-0 inset-x-0 h-28 sm:h-36 ${flapGradient} pointer-events-none rounded-t-2xl sm:rounded-t-3xl border-t border-gold-400/60 z-30`}
           >
             {/* Flap Gold Pinstripe */}
             <div className="w-full h-full border-b-2 border-gold-400/40 relative">
@@ -281,10 +277,17 @@ export const RoyalEnvelopeExperience: React.FC<RoyalEnvelopeExperienceProps> = (
       </div>
 
       {/* Floating Bottom Sound & Gesture Guidance */}
-      <div className="absolute bottom-3 sm:bottom-6 inset-x-0 flex flex-col items-center justify-center pointer-events-none z-20 px-4 text-center">
+      <div className="absolute bottom-6 sm:bottom-9 inset-x-0 flex flex-col items-center justify-center pointer-events-none z-20 px-4 text-center">
         <p className="text-[10px] sm:text-xs text-gold-200/80 font-serif flex items-center space-x-1.5 bg-black/40 px-3.5 py-1.5 rounded-full border border-gold-400/30 backdrop-blur-sm">
           <Volume2 className="w-3.5 h-3.5 text-gold-400 animate-pulse" />
-          <span>Interactive sound &amp; royal animation plays upon opening</span>
+          <span>Tap to open • Interactive royal sound &amp; dissolve animation</span>
+        </p>
+      </div>
+
+      {/* Subtle Bottom Hallmark — Sans-serif, at bottom, slightly visible */}
+      <div className="absolute bottom-1.5 sm:bottom-2.5 inset-x-0 flex flex-col items-center justify-center pointer-events-none z-20 px-4 text-center">
+        <p className="font-sans text-[10px] sm:text-[11px] text-cream-200/50 tracking-[0.2em] uppercase font-medium select-none">
+          created by Photographically Yours 2026
         </p>
       </div>
     </div>

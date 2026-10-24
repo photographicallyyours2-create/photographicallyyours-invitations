@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GalleryPhoto } from '../types/wedding';
 import { RoyalDivider } from './JaaliDecor';
 import { RoyalImage } from './RoyalImage';
+import { compressImageFile } from '../utils/storage';
 import {
   X,
   ChevronLeft,
@@ -85,24 +86,23 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [activePhotoIndex, handleClose, handleNext, handlePrev]);
 
-  // Read dropped or selected image files
-  const processFiles = (files: FileList | File[], targetIndex?: number) => {
+  // Read and compress dropped or selected image files
+  const processFiles = async (files: FileList | File[], targetIndex?: number) => {
     const imageFiles = Array.from(files).filter((file) => file.type.startsWith('image/'));
     if (imageFiles.length === 0) return;
 
-    let loadedCount = 0;
+    showNotification(`Optimizing & saving ${imageFiles.length} photo${imageFiles.length > 1 ? 's' : ''}...`);
+
     const newItems = [...items];
 
-    imageFiles.forEach((file, fIdx) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (!result) return;
-
+    for (let fIdx = 0; fIdx < imageFiles.length; fIdx++) {
+      const file = imageFiles[fIdx];
+      try {
+        const compressedDataUrl = await compressImageFile(file, 1400, 0.82);
         const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
         const newPhoto: GalleryPhoto = {
           id: `photo-drop-${Date.now()}-${fIdx}`,
-          src: result,
+          src: compressedDataUrl,
           alt: cleanName,
           caption: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
           location: 'Celebration Moments',
@@ -120,18 +120,16 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             newItems[fIdx % 10] = newPhoto;
           }
         }
+      } catch (err) {
+        console.warn('Error compressing photo:', err);
+      }
+    }
 
-        loadedCount++;
-        if (loadedCount === imageFiles.length) {
-          // Ensure at most 10 items if more were added
-          const finalPhotos = newItems.slice(0, 10);
-          setItems(finalPhotos);
-          onPhotosChange?.(finalPhotos);
-          showNotification(`Added ${imageFiles.length} photo${imageFiles.length > 1 ? 's' : ''} to gallery!`);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    // Ensure at most 10 items
+    const finalPhotos = newItems.slice(0, 10);
+    setItems(finalPhotos);
+    onPhotosChange?.(finalPhotos);
+    showNotification(`✓ Saved ${imageFiles.length} photo${imageFiles.length > 1 ? 's' : ''} to gallery permanently!`);
   };
 
   // HTML5 Drag and drop reordering handlers
