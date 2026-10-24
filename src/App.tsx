@@ -29,9 +29,8 @@ import { ShlokaRoyaleTemplate } from './templates/ShlokaRoyaleTemplate';
 import { PastelCourtyardTemplate } from './templates/PastelCourtyardTemplate';
 
 // Global Helpers
-import { AudioPlayer } from './components/AudioPlayer';
 import { AdminEditorDrawer } from './components/AdminEditorDrawer';
-import { RoyalEnvelopeExperience } from './components/RoyalEnvelopeExperience';
+import { RoyalGateIntroExperience } from './components/RoyalGateIntroExperience';
 import { loadAllFromIndexedDB, persistWeddingData, PY_STORAGE_KEY } from './utils/storage';
 
 type AppView = 'home' | 'catalogue' | 'template-detail' | 'template' | 'enquire';
@@ -104,15 +103,24 @@ export function App() {
   // Synchronize router state with URL hash
   useEffect(() => {
     const parseHash = () => {
+      const hostname = window.location.hostname.toLowerCase();
+      const pathname = window.location.pathname.toLowerCase();
       const rawHash = window.location.hash || '#/';
       const decodedHash = decodeURIComponent(rawHash).toLowerCase().trim();
 
-      // Clean Client Routes (e.g. #/photographicallyyours/sahil&kajal, #/photographicallyyours/sahil-kajal, #/sahil-kajal, #/sahil, #/kajal)
-      if (
+      // Clean Subdomain & Client Routes
+      // e.g. sahil-kajal.photographicallyyours.com, sahil-kajal.photographicallyyours.in,
+      // #/photographicallyyours/sahil&kajal, #/sahil-kajal, /sahil-kajal
+      const isSahilKajal =
+        hostname.includes('sahil') ||
+        hostname.includes('kajal') ||
+        pathname.includes('sahil') ||
+        pathname.includes('kajal') ||
         decodedHash.includes('photographicallyyours/sahil') ||
         decodedHash.includes('sahil') ||
-        decodedHash.includes('kajal')
-      ) {
+        decodedHash.includes('kajal');
+
+      if (isSahilKajal) {
         setActiveTemplateId('bodh-heritage');
         setCurrentView('template');
         document.title = 'Sahil & Kajal Wedding Invitation | Photographically Yours';
@@ -328,9 +336,6 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-cream-100 text-charcoal-800 relative selection:bg-gold-500 selection:text-white flex flex-col justify-between">
-      {/* Ambient Audio Player floating top-right across the site */}
-      <AudioPlayer />
-
       {/* Top Navigation for Studio Pages */}
       {currentView !== 'template' && (
         <StudioNav currentRoute={currentView} onNavigate={handleNavigate} />
@@ -434,11 +439,12 @@ export function App() {
         onUpdateData={handleUpdateData}
       />
 
-      {/* Interactive Royal Envelope Opening Experience with Dissolve Transition */}
-      <RoyalEnvelopeExperience
-        data={getActiveWeddingData()}
-        variant={activeTemplateId === 'bodh-heritage' ? 'heritage-olive' : 'crimson-gold'}
-      />
+      {/* Interactive Royal Palace Gate Opening Experience with Dissolve Transition & Wedding Track */}
+      {currentView === 'template' && (
+        <RoyalGateIntroExperience
+          data={getActiveWeddingData()}
+        />
+      )}
     </div>
   );
 }
