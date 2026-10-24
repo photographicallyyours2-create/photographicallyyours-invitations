@@ -33,6 +33,41 @@ interface AdminEditorDrawerProps {
 
 type EditorTab = 'general' | 'events' | 'gallery' | 'story' | 'presets';
 
+const ensureValidData = (incoming?: WeddingData): WeddingData => {
+  return {
+    brideName: incoming?.brideName || 'Kajal',
+    groomName: incoming?.groomName || 'Sahil',
+    monogram: incoming?.monogram || 'S & K',
+    weddingDateFormatted: incoming?.weddingDateFormatted || 'November 20 – 22, 2026',
+    weddingDateIso: incoming?.weddingDateIso || '2026-11-20T19:00:00+05:30',
+    venueCity: incoming?.venueCity || 'New Delhi',
+    primaryVenue: incoming?.primaryVenue || 'Andaaj Mansion Banquet & Hotel Surya Grand',
+    hashtag: incoming?.hashtag || '#SahilWedsKajal',
+    rsvpDeadline: incoming?.rsvpDeadline || 'November 10, 2026',
+    invocation: incoming?.invocation || '॥ श्री गणेशाय नमः ॥',
+    welcomeNote: incoming?.welcomeNote || 'Destiny brought them together and now love will seal their bond......forever. We warmly request your auspicious presence and blessings as Sahil & Kajal unite in sacred matrimony.',
+    quote: incoming?.quote || 'Destiny brought them together and now love will seal their bond......forever',
+    parentsBride: incoming?.parentsBride || 'Daughter of Smt. Veena & Sh. Jagdish Tuteja',
+    parentsGroom: incoming?.parentsGroom || 'Son of Smt. Sunila & Sh. Rajeev Arora',
+    grandparentsGroom: incoming?.grandparentsGroom || 'Grand S/o Late Smt. Raj Kumari & Late Sh. Vishnu Bhagwan',
+    residenceAddress: incoming?.residenceAddress || 'H. No.- C-96, Moti Nagar, New Delhi-110015',
+    invitationOpening: incoming?.invitationOpening || 'With the divine blessings of our revered ancestors and elders, we cordially invite you to celebrate the wedding ceremonies of',
+    complimentsFrom: incoming?.complimentsFrom || 'With Best Compliments From: Narang Family, All Relatives & Friends',
+    shlokas: Array.isArray(incoming?.shlokas) && incoming.shlokas.length > 0
+      ? incoming.shlokas
+      : [
+          'वक्रतुण्ड महाकाय सूर्यकोटि समप्रभः । निर्विघ्नं कुरुमे देव सर्वकार्येषु सर्वदा ॥',
+          'विघ्न हरण मंगल करण, श्री गणपति महाराज । प्रथम निमंत्रण आपको, पूरन करियो काज ॥',
+        ],
+    events: Array.isArray(incoming?.events) ? incoming.events : [],
+    gallery: Array.isArray(incoming?.gallery) ? incoming.gallery : [],
+    story: Array.isArray(incoming?.story) ? incoming.story : [],
+    rsvpContacts: Array.isArray(incoming?.rsvpContacts) ? incoming.rsvpContacts : [],
+    contactPhone: incoming?.contactPhone || '+91 99102 62576',
+    contactEmail: incoming?.contactEmail || 'arora.tuteja.weddings@gmail.com',
+  };
+};
+
 export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   isOpen,
   onClose,
@@ -40,7 +75,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   activeTemplateId = 'royal-heirloom',
   onUpdateData,
 }) => {
-  const [formData, setFormData] = useState<WeddingData>({ ...data });
+  const [formData, setFormData] = useState<WeddingData>(() => ensureValidData(data));
   const [activeTab, setActiveTab] = useState<EditorTab>('general');
   const [showSavedFeedback, setShowSavedFeedback] = useState<boolean>(false);
   const [feedbackMessage, setFeedbackMessage] = useState<string>('Live changes applied!');
@@ -51,21 +86,29 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
 
   // Sync internal form data when incoming data changes
   useEffect(() => {
-    setFormData({ ...data });
+    if (data) {
+      setFormData(ensureValidData(data));
+    }
   }, [data]);
 
   if (!isOpen) return null;
 
   const handleGeneralChange = (field: keyof WeddingData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   // Event handlers
   const handleEventChange = (index: number, field: keyof WeddingEvent, value: string) => {
     setFormData((prev) => {
-      const updatedEvents = [...prev.events];
+      const updatedEvents = [...(prev.events || [])];
       updatedEvents[index] = { ...updatedEvents[index], [field]: value };
-      return { ...prev, events: updatedEvents };
+      const updated = { ...prev, events: updatedEvents };
+      onUpdateData(updated);
+      return updated;
     });
   };
 
@@ -86,26 +129,36 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
       calendarDateStart: '20261220T123000Z',
       calendarDateEnd: '20261220T180000Z',
     };
-    setFormData((prev) => ({ ...prev, events: [...prev.events, newEvent] }));
+    setFormData((prev) => {
+      const updated = { ...prev, events: [...(prev.events || []), newEvent] };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   const handleRemoveEvent = (index: number) => {
-    if (formData.events.length <= 1) {
+    if ((formData.events || []).length <= 1) {
       alert('You must have at least one wedding event.');
       return;
     }
-    setFormData((prev) => ({
-      ...prev,
-      events: prev.events.filter((_, i) => i !== index),
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        events: (prev.events || []).filter((_, i) => i !== index),
+      };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   // Gallery handlers
   const handleGalleryChange = (index: number, field: keyof GalleryPhoto, value: string) => {
     setFormData((prev) => {
-      const updatedGallery = [...prev.gallery];
+      const updatedGallery = [...(prev.gallery || [])];
       updatedGallery[index] = { ...updatedGallery[index], [field]: value };
-      return { ...prev, gallery: updatedGallery };
+      const updated = { ...prev, gallery: updatedGallery };
+      onUpdateData(updated);
+      return updated;
     });
   };
 
@@ -118,18 +171,26 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
       location: formData.venueCity || 'Heritage Grounds',
       spanClass: 'md:col-span-1 md:row-span-1',
     };
-    setFormData((prev) => ({ ...prev, gallery: [...prev.gallery, newPhoto] }));
+    setFormData((prev) => {
+      const updated = { ...prev, gallery: [...(prev.gallery || []), newPhoto] };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   const handleRemovePhoto = (index: number) => {
-    if (formData.gallery.length <= 1) {
+    if ((formData.gallery || []).length <= 1) {
       alert('You must have at least one photo in the gallery.');
       return;
     }
-    setFormData((prev) => ({
-      ...prev,
-      gallery: prev.gallery.filter((_, i) => i !== index),
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        gallery: (prev.gallery || []).filter((_, i) => i !== index),
+      };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   const drawerFileInputRef = React.useRef<HTMLInputElement>(null);
@@ -204,9 +265,11 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
           const res = ev.target?.result as string;
           if (!res) return;
           setFormData((prev) => {
-            const updated = [...prev.gallery];
-            updated[targetIndex] = { ...updated[targetIndex], src: res };
-            return { ...prev, gallery: updated };
+            const updatedGallery = [...(prev.gallery || [])];
+            updatedGallery[targetIndex] = { ...updatedGallery[targetIndex], src: res };
+            const updated = { ...prev, gallery: updatedGallery };
+            onUpdateData(updated);
+            return updated;
           });
           setFeedbackMessage(`✓ Photo #${targetIndex + 1} updated with uploaded image!`);
           setShowSavedFeedback(true);
@@ -224,10 +287,12 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
     }
 
     setFormData((prev) => {
-      const updated = [...prev.gallery];
-      const [moved] = updated.splice(draggedPhotoIndex, 1);
-      updated.splice(targetIndex, 0, moved);
-      return { ...prev, gallery: updated };
+      const updatedGallery = [...(prev.gallery || [])];
+      const [moved] = updatedGallery.splice(draggedPhotoIndex, 1);
+      updatedGallery.splice(targetIndex, 0, moved);
+      const updated = { ...prev, gallery: updatedGallery };
+      onUpdateData(updated);
+      return updated;
     });
 
     setFeedbackMessage(`✓ Reordered photo #${draggedPhotoIndex + 1} to position #${targetIndex + 1}`);
@@ -244,9 +309,11 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   // Story handlers
   const handleStoryChange = (index: number, field: keyof StoryChapter, value: string) => {
     setFormData((prev) => {
-      const updatedStory = [...prev.story];
+      const updatedStory = [...(prev.story || [])];
       updatedStory[index] = { ...updatedStory[index], [field]: value };
-      return { ...prev, story: updatedStory };
+      const updated = { ...prev, story: updatedStory };
+      onUpdateData(updated);
+      return updated;
     });
   };
 
@@ -256,18 +323,26 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
       title: 'A New Milestone',
       text: 'Our journey continued to unfold with love, laughter, and family blessings.',
     };
-    setFormData((prev) => ({ ...prev, story: [...prev.story, newChapter] }));
+    setFormData((prev) => {
+      const updated = { ...prev, story: [...(prev.story || []), newChapter] };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   const handleRemoveStoryChapter = (index: number) => {
-    if (formData.story.length <= 1) {
+    if ((formData.story || []).length <= 1) {
       alert('You must have at least one story chapter.');
       return;
     }
-    setFormData((prev) => ({
-      ...prev,
-      story: prev.story.filter((_, i) => i !== index),
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        story: (prev.story || []).filter((_, i) => i !== index),
+      };
+      onUpdateData(updated);
+      return updated;
+    });
   };
 
   // Presets
@@ -443,7 +518,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Events ({formData.events.length})</span>
+              <span>Events ({(formData.events || []).length})</span>
             </button>
 
             <button
@@ -456,7 +531,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
               }`}
             >
               <ImageIcon className="w-3.5 h-3.5" />
-              <span>Gallery ({formData.gallery.length})</span>
+              <span>Gallery ({(formData.gallery || []).length})</span>
             </button>
 
             <button
@@ -469,7 +544,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Story ({formData.story.length})</span>
+              <span>Story ({(formData.story || []).length})</span>
             </button>
 
             <button
@@ -679,7 +754,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
                   </button>
                 </div>
 
-                {formData.events.map((event, idx) => (
+                {(formData.events || []).map((event, idx) => (
                   <div
                     key={event.id || idx}
                     className="p-3.5 sm:p-4 rounded-xl bg-white border border-gold-300/80 shadow-xs space-y-3"
@@ -1123,7 +1198,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
                   </button>
                 </div>
 
-                {formData.story.map((chapter, idx) => (
+                {(formData.story || []).map((chapter, idx) => (
                   <div
                     key={idx}
                     className="p-3.5 rounded-xl bg-white border border-gold-300/80 shadow-xs space-y-2.5"
@@ -1215,7 +1290,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
                           {preset.description}
                         </p>
                         <div className="text-[10px] text-burgundy-900 font-serif mt-1">
-                          {preset.data.events.length} Events • {preset.data.gallery.length} Photos • {preset.data.weddingDateFormatted}
+                          {(preset.data?.events || []).length} Events • {(preset.data?.gallery || []).length} Photos • {preset.data?.weddingDateFormatted}
                         </div>
                       </div>
 

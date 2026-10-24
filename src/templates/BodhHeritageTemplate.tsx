@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { WeddingData } from '../types/wedding';
 import { EventsSchedule } from '../components/EventsSchedule';
 import { PhotoGallery } from '../components/PhotoGallery';
@@ -18,6 +18,10 @@ import {
   Quote,
   Home,
   Heart,
+  Edit3,
+  Check,
+  X,
+  Sliders,
 } from 'lucide-react';
 import { CountdownTimer } from '../components/CountdownTimer';
 
@@ -41,6 +45,20 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
 
   const handleScrollToEvents = () => {
     eventsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const [isQuickEditOpen, setIsQuickEditOpen] = useState(false);
+  const [quickSaved, setQuickSaved] = useState(false);
+
+  const handleFieldChange = (field: keyof WeddingData, value: string) => {
+    if (onUpdateData) {
+      onUpdateData({
+        ...data,
+        [field]: value,
+      });
+      setQuickSaved(true);
+      setTimeout(() => setQuickSaved(false), 2000);
+    }
   };
 
   // Authentic Shlokas from Sahil & Kajal's Wedding Card
@@ -149,6 +167,15 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
 
           {/* Quick Action Navigation Bar */}
           <div className="mt-5 sm:mt-6 pt-4 border-t border-[#C29B38]/30 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setIsQuickEditOpen(true)}
+              className="min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gold-gradient text-burgundy-950 font-serif text-xs sm:text-sm tracking-wider uppercase font-bold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2 border border-gold-400 cursor-pointer"
+            >
+              <Edit3 className="w-4 h-4 text-burgundy-900" />
+              <span>Edit Text &amp; Details</span>
+            </button>
+
             <button
               onClick={handleScrollDown}
               className="min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#4B5A2B] hover:bg-[#3B4722] text-white font-serif text-xs sm:text-sm tracking-wider uppercase font-semibold shadow-md hover:shadow-lg transition-all inline-flex items-center space-x-1.5"
@@ -363,6 +390,197 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
           onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         />
       </div>
+
+      {/* Direct On-Page Quick Edit Modal for Instant Text Updates */}
+      {isQuickEditOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-burgundy-950/75 backdrop-blur-sm animate-fade-in"
+        >
+          <div className="bg-[#FCFAF5] rounded-3xl border-2 border-[#C29B38] p-5 sm:p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative text-left">
+            <div className="flex items-center justify-between pb-3 border-b border-[#C29B38]/40 mb-4">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-full bg-gold-200 text-burgundy-900 flex items-center justify-center shadow-xs">
+                  <Edit3 className="w-4 h-4 text-burgundy-900" />
+                </div>
+                <div>
+                  <h3 className="font-serif-royal text-lg sm:text-xl font-bold text-[#4B5A2B]">
+                    Quick Edit Text &amp; Details
+                  </h3>
+                  <p className="text-[11px] text-[#2C381F]/70 font-serif">
+                    Live editable • Updates your invitation on the screen in real-time
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsQuickEditOpen(false)}
+                className="w-8 h-8 rounded-full bg-[#EAE6D9] hover:bg-[#D8D2C0] flex items-center justify-center text-[#2C381F] transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3.5 text-xs">
+              {/* Couple Names */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    Groom's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={data.groomName || ''}
+                    onChange={(e) => handleFieldChange('groomName', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] font-serif text-sm focus:ring-1 focus:ring-[#4B5A2B]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    Bride's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={data.brideName || ''}
+                    onChange={(e) => handleFieldChange('brideName', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] font-serif text-sm focus:ring-1 focus:ring-[#4B5A2B]"
+                  />
+                </div>
+              </div>
+
+              {/* Wedding Dates & City */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    Wedding Date Text
+                  </label>
+                  <input
+                    type="text"
+                    value={data.weddingDateFormatted || ''}
+                    onChange={(e) => handleFieldChange('weddingDateFormatted', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    City &amp; State
+                  </label>
+                  <input
+                    type="text"
+                    value={data.venueCity || ''}
+                    onChange={(e) => handleFieldChange('venueCity', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                  Primary Venue
+                </label>
+                <input
+                  type="text"
+                  value={data.primaryVenue || ''}
+                  onChange={(e) => handleFieldChange('primaryVenue', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                />
+              </div>
+
+              {/* Parents & Family Lineage */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    Groom's Parents
+                  </label>
+                  <input
+                    type="text"
+                    value={data.parentsGroom || ''}
+                    onChange={(e) => handleFieldChange('parentsGroom', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                    Bride's Parents
+                  </label>
+                  <input
+                    type="text"
+                    value={data.parentsBride || ''}
+                    onChange={(e) => handleFieldChange('parentsBride', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                  Grandparents &amp; Lineage
+                </label>
+                <input
+                  type="text"
+                  value={data.grandparentsGroom || ''}
+                  onChange={(e) => handleFieldChange('grandparentsGroom', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                  Residence Address
+                </label>
+                <input
+                  type="text"
+                  value={data.residenceAddress || ''}
+                  onChange={(e) => handleFieldChange('residenceAddress', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#4B5A2B] mb-1">
+                  Welcome Story Message
+                </label>
+                <textarea
+                  rows={2}
+                  value={data.welcomeNote || ''}
+                  onChange={(e) => handleFieldChange('welcomeNote', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-[#C29B38]/50 bg-white text-[#2C381F] text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 mt-4 border-t border-[#C29B38]/30">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsQuickEditOpen(false);
+                  onOpenAdmin();
+                }}
+                className="text-xs font-serif text-[#4B5A2B] hover:text-[#2C381F] underline flex items-center space-x-1"
+              >
+                <Sliders className="w-3.5 h-3.5 text-[#C29B38]" />
+                <span>Open Full Customizer (Events, Photos, Music)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsQuickEditOpen(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#4B5A2B] text-white font-serif text-xs font-bold hover:bg-[#3B4722] transition-colors shadow-sm flex items-center justify-center space-x-1.5"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Done &amp; Saved</span>
+              </button>
+            </div>
+
+            {quickSaved && (
+              <div className="mt-2 text-center text-emerald-800 text-xs font-serif font-bold animate-fade-in">
+                ✓ Text updated live and saved to device!
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

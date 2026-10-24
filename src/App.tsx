@@ -58,7 +58,20 @@ export function App() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
 
   const getActiveWeddingData = (): WeddingData => {
-    return customizedData[activeTemplateId] || getTemplateDefaultData(activeTemplateId);
+    const raw = customizedData[activeTemplateId];
+    const defaultData = getTemplateDefaultData(activeTemplateId);
+    if (!raw) return defaultData;
+    return {
+      ...defaultData,
+      ...raw,
+      brideName: raw.brideName || defaultData.brideName,
+      groomName: raw.groomName || defaultData.groomName,
+      events: Array.isArray(raw.events) && raw.events.length > 0 ? raw.events : defaultData.events,
+      gallery: Array.isArray(raw.gallery) && raw.gallery.length > 0 ? raw.gallery : defaultData.gallery,
+      story: Array.isArray(raw.story) && raw.story.length > 0 ? raw.story : defaultData.story,
+      shlokas: Array.isArray(raw.shlokas) && raw.shlokas.length > 0 ? raw.shlokas : defaultData.shlokas,
+      rsvpContacts: Array.isArray(raw.rsvpContacts) && raw.rsvpContacts.length > 0 ? raw.rsvpContacts : defaultData.rsvpContacts,
+    };
   };
 
   const handleUpdateData = (newData: WeddingData) => {
@@ -67,6 +80,9 @@ export function App() {
         ...prev,
         [activeTemplateId]: newData,
       };
+      if (activeTemplateId === 'bodh-heritage' || newData.brideName === 'Kajal' || newData.groomName === 'Sahil') {
+        updated['bodh-heritage'] = newData;
+      }
       try {
         localStorage.setItem(PY_STORAGE_KEY, JSON.stringify(updated));
       } catch (e) {
@@ -187,9 +203,14 @@ export function App() {
   };
 
   const handleCustomizeTemplate = (templateId: string) => {
-    setEnquiryTemplateId(templateId);
-    setCurrentView('enquire');
-    window.location.hash = `#/enquire?template=${templateId}`;
+    setActiveTemplateId(templateId);
+    setCurrentView('template');
+    setIsAdminOpen(true);
+    const route =
+      templateId === 'bodh-heritage'
+        ? `#/photographicallyyours/sahil-kajal`
+        : `#/template/${templateId}`;
+    window.location.hash = route;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
