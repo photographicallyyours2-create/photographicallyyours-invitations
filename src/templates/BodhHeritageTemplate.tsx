@@ -85,6 +85,13 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
         <div className="absolute bottom-2.5 right-2.5 sm:bottom-5 sm:right-5 text-[#4B5A2B] text-sm sm:text-xl pointer-events-none">🌹</div>
 
         <div className="w-full max-w-3xl bg-[#FCFAF5]/95 backdrop-blur-md rounded-2xl border border-[#4B5A2B]/25 shadow-2xl p-4 sm:p-10 md:p-12 text-center relative z-10 my-4 sm:my-8">
+          {/* Official Atelier Hallmark */}
+          <div className="mb-2.5">
+            <span className="text-[10px] sm:text-xs font-serif uppercase tracking-[0.25em] text-[#4B5A2B]/90 font-bold bg-[#EAE6D9]/80 px-3 py-1 rounded-full border border-[#C29B38]/40">
+              Created by Photographically Yours, 2026
+            </span>
+          </div>
+
           {/* Devanagari Auspicious Inscription */}
           <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#EAE6D9] border border-[#4B5A2B]/40 text-[#4B5A2B] text-xs sm:text-sm font-serif tracking-widest uppercase mb-3">
             <Sparkles className="w-3.5 h-3.5 text-[#C29B38]" />

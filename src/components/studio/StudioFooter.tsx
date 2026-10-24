@@ -139,8 +139,8 @@ export const StudioFooter: React.FC<StudioFooterProps> = ({ onNavigate }) => {
             <span>for Royal Indian Weddings Globally</span>
           </div>
 
-          <p className="text-[11px]">
-            © {new Date().getFullYear()} Photographically Yours. Premium Digital Wedding Stationery &amp; Photography.
+          <p className="text-[11px] font-medium text-gold-300">
+            Created by Photographically Yours, 2026 • Premium Digital Wedding Stationery &amp; Photography.
           </p>
         </div>
       </div>

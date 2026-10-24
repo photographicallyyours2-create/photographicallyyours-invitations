@@ -1419,8 +1419,8 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="pt-4 border-t border-gold-300 text-[11px] text-charcoal-800/70 text-center">
-          The Atelier • Bespoke Wedding Invitation Customizer
+        <div className="pt-4 border-t border-gold-300 text-[11px] text-charcoal-800/70 text-center font-serif">
+          Created by Photographically Yours, 2026 • The Atelier Bespoke Customizer
         </div>
       </div>
     </div>

@@ -39,10 +39,10 @@ export const StudioHomePage: React.FC<StudioHomePageProps> = ({
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
           {/* Top Atelier Badge */}
-          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-cream-50 border border-gold-400 shadow-xs text-[10px] sm:text-xs font-serif tracking-[0.15em] sm:tracking-[0.3em] text-burgundy-900 uppercase mb-4 sm:mb-6 animate-fade-in">
+          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-cream-50 border border-gold-400 shadow-xs text-[10px] sm:text-xs font-serif tracking-[0.15em] sm:tracking-[0.25em] text-burgundy-900 uppercase mb-4 sm:mb-6 animate-fade-in">
             <Sparkles className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
-            <span className="hidden sm:inline">The Atelier • Bespoke Royal Wedding Stationery</span>
-            <span className="sm:hidden">The Atelier • Bespoke Stationery</span>
+            <span className="hidden sm:inline">Created by Photographically Yours, 2026 • Royal Wedding Stationery</span>
+            <span className="sm:hidden">Created by Photographically Yours, 2026</span>
             <Sparkles className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
           </div>
 
@@ -62,8 +62,16 @@ export const StudioHomePage: React.FC<StudioHomePageProps> = ({
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-16">
             <button
+              onClick={() => onSelectInteractiveTemplate('bodh-heritage')}
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gold-gradient text-burgundy-950 font-serif text-sm sm:text-base tracking-wider uppercase font-bold shadow-royal hover:shadow-gold-glow transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-gold-400 min-h-[44px]"
+            >
+              <span className="text-base">✉</span>
+              <span>Phone Envelope Experience</span>
+            </button>
+
+            <button
               onClick={() => onNavigate('catalogue')}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-6 sm:px-9 py-3.5 sm:py-4 rounded-full bg-burgundy-gradient text-gold-200 font-serif text-sm sm:text-base tracking-wider uppercase font-semibold shadow-royal hover:shadow-gold-glow transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-gold-400/50 min-h-[44px]"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-burgundy-gradient text-gold-200 font-serif text-sm sm:text-base tracking-wider uppercase font-semibold shadow-royal hover:shadow-gold-glow transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-gold-400/50 min-h-[44px]"
             >
               <span>Explore The Collection</span>
               <ArrowRight className="w-4 h-4 text-gold-400" />
@@ -71,10 +79,10 @@ export const StudioHomePage: React.FC<StudioHomePageProps> = ({
 
             <button
               onClick={() => onNavigate('enquire')}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-gold-400 bg-cream-50/90 text-burgundy-950 font-serif text-sm sm:text-base tracking-wider uppercase font-medium hover:bg-cream-200/80 shadow-xs transition-colors min-h-[44px]"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full border border-gold-400 bg-cream-50/90 text-burgundy-950 font-serif text-sm sm:text-base tracking-wider uppercase font-medium hover:bg-cream-200/80 shadow-xs transition-colors min-h-[44px]"
             >
               <Sparkles className="w-4 h-4 text-gold-600" />
-              <span>Create Your Invitation</span>
+              <span>Custom Consultation</span>
             </button>
           </div>
 

@@ -31,6 +31,7 @@ import { PastelCourtyardTemplate } from './templates/PastelCourtyardTemplate';
 // Global Helpers
 import { AudioPlayer } from './components/AudioPlayer';
 import { AdminEditorDrawer } from './components/AdminEditorDrawer';
+import { RoyalEnvelopeExperience } from './components/RoyalEnvelopeExperience';
 
 type AppView = 'home' | 'catalogue' | 'template-detail' | 'template' | 'enquire';
 
@@ -423,6 +424,12 @@ export function App() {
         data={getActiveWeddingData()}
         activeTemplateId={activeTemplateId}
         onUpdateData={handleUpdateData}
+      />
+
+      {/* Interactive Royal Envelope Opening Experience with Dissolve Transition */}
+      <RoyalEnvelopeExperience
+        data={getActiveWeddingData()}
+        variant={activeTemplateId === 'bodh-heritage' ? 'heritage-olive' : 'crimson-gold'}
       />
     </div>
   );

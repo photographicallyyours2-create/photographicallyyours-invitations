@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WeddingData } from '../types/wedding';
 import { MonogramBadge, RoyalDivider } from './JaaliDecor';
-import { Copy, Check, ArrowUp, Heart } from 'lucide-react';
+import { Copy, Check, ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   data: WeddingData;
@@ -66,11 +66,19 @@ export const Footer: React.FC<FooterProps> = ({ data, onOpenAdmin, onScrollToTop
         </p>
 
         {/* Bottom Bar */}
-        <div className="pt-6 sm:pt-8 border-t border-gold-500/20 flex flex-col sm:flex-row items-center justify-between text-xs text-cream-200/60 font-sans gap-3 sm:gap-4">
-          <div className="flex items-center space-x-1">
-            <span>Crafted with</span>
-            <Heart className="w-3 h-3 text-gold-400 fill-gold-400" />
-            <span>for Royal Indian Weddings</span>
+        <div className="pt-6 sm:pt-8 border-t border-gold-500/20 flex flex-col sm:flex-row items-center justify-between text-xs text-cream-200/70 font-sans gap-3 sm:gap-4">
+          <div className="flex items-center space-x-2">
+            <img
+              src="./py-logo.png"
+              alt="Photographically Yours"
+              className="w-5 h-5 rounded-full object-contain border border-gold-400/50"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/py-logo.png';
+              }}
+            />
+            <span className="font-serif font-bold text-gold-200 tracking-wider">
+              Created by Photographically Yours, 2026
+            </span>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -78,7 +86,7 @@ export const Footer: React.FC<FooterProps> = ({ data, onOpenAdmin, onScrollToTop
               onClick={onOpenAdmin}
               className="min-h-[40px] py-1 text-gold-300/80 hover:text-gold-200 underline underline-offset-4 decoration-gold-400/40 transition-colors"
             >
-              Prototype Content Editor
+              Customizer Editor
             </button>
             <button
               onClick={onScrollToTop}
