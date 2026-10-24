@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #FAF6F0;
+    color: #2A2421;
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, .font-serif-royal {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: 0.02em;
+  }
+
+  .font-royal-title {
+    font-family: 'Cinzel', Georgia, serif;
+    letter-spacing: 0.08em;
+  }
+
+  .font-script-accent {
+    font-family: 'Pinyon Script', cursive;
+    letter-spacing: 0.03em;
+  }
+}
+
+/* Tasteful subtle Jaali lattice pattern */
+.bg-jaali-subtle {
+  background-color: #FAF6F0;
+  background-image: radial-gradient(rgba(197, 160, 89, 0.14) 1.2px, transparent 1.2px), 
+                    radial-gradient(rgba(197, 160, 89, 0.09) 1.2px, #FAF6F0 1.2px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+.bg-jaali-burgundy {
+  background-color: #5E1924;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.16) 1.2px, transparent 1.2px),
+                    radial-gradient(rgba(212, 175, 55, 0.1) 1.2px, #5E1924 1.2px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+/* Palace Arch Shape CSS */
+.royal-arch {
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+}
+
+.royal-arch-inverted {
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+}
+
+/* Foil Gold Border Styling */
+.gold-foil-border {
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 4px 20px -2px rgba(197, 160, 89, 0.15);
+}
+
+.gold-foil-double-border {
+  position: relative;
+  border: 1px solid rgba(197, 160, 89, 0.5);
+}
+
+.gold-foil-double-border::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  pointer-events: none;
+}
+
+/* Reduced motion preference */
+/* Additional Theme Textures */
+.bg-velvet-burgundy {
+  background: radial-gradient(circle at 50% 30%, #5E1924 0%, #340811 60%, #1A0307 100%);
+}
+
+.bg-botanical-sage {
+  background-color: #FAF7F2;
+  background-image: radial-gradient(rgba(74, 107, 93, 0.12) 1.2px, transparent 1.2px), 
+                    radial-gradient(rgba(74, 107, 93, 0.08) 1.2px, #FAF7F2 1.2px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+.bg-sandstone-warm {
+  background-color: #F8F3EA;
+  background-image: radial-gradient(rgba(200, 109, 81, 0.12) 1.2px, transparent 1.2px),
+                    radial-gradient(rgba(224, 159, 103, 0.08) 1.2px, #F8F3EA 1.2px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+.bg-monochrome-paper {
+  background-color: #FFFFFF;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Simulated Mobile Device Frame Mode
+   When on desktop with the phone toggle enabled, ensures that components
+   strictly render in mobile single-column layout instead of triggering
+   desktop media queries (e.g. md:grid-cols-3, md:grid-cols-2).
+   ========================================================================== */
+
+.simulated-mobile-canvas {
+  width: 100%;
+}
+
+/* Force all grids inside the simulated mobile phone to single column */
+.simulated-mobile-canvas .grid:not(.countdown-timer-grid):not(.mobile-cols-2):not(.grid-cols-4) {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+/* Force elements with desktop media query grid columns to single column */
+.simulated-mobile-canvas [class*="md:grid-cols-"],
+.simulated-mobile-canvas [class*="lg:grid-cols-"],
+.simulated-mobile-canvas [class*="sm:grid-cols-"] {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+/* Countdown timer inside mobile canvas */
+.simulated-mobile-canvas .countdown-timer-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 0.375rem !important;
+}
+
+.simulated-mobile-canvas .countdown-timer-grid > div {
+  padding: 0.5rem 0.25rem !important;
+  min-width: 0 !important;
+}
+
+.simulated-mobile-canvas .countdown-number-digit {
+  font-size: 1.625rem !important;
+  line-height: 1.75rem !important;
+}
+
+.simulated-mobile-canvas .countdown-unit-label {
+  font-size: 0.5625rem !important; /* 9px */
+  line-height: 0.75rem !important;
+  letter-spacing: 0.05em !important;
+  margin-top: 0.25rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Reset multi-column spans in single-column layouts */
+.simulated-mobile-canvas [class*="col-span-"],
+.simulated-mobile-canvas [class*="row-span-"] {
+  grid-column: span 1 / span 1 !important;
+  grid-row: span 1 / span 1 !important;
+}
+
+/* Stack flex rows vertically inside mobile frame */
+.simulated-mobile-canvas .md\:flex-row,
+.simulated-mobile-canvas .sm\:flex-row,
+.simulated-mobile-canvas .lg\:flex-row {
+  flex-direction: column !important;
+}
+
+.simulated-mobile-canvas .md\:w-1\/2,
+.simulated-mobile-canvas .lg\:w-1\/2 {
+  width: 100% !important;
+}
+
+/* Scale large headings down comfortably */
+.simulated-mobile-canvas h1 {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+}
+
+.simulated-mobile-canvas h2 {
+  font-size: 1.75rem !important;
+  line-height: 2.125rem !important;
+}
+
+/* Padding adjustments for mobile canvas */
+.simulated-mobile-canvas section {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+
+
