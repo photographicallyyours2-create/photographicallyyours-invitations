@@ -49,43 +49,30 @@ export async function saveToIndexedDB(key: string, data: WeddingData): Promise<v
 }
 
 /**
- * Load all stored wedding data from IndexedDB
+ * Load all stored wedding data from IndexedDB using bulletproof cursor traversal
  */
 export async function loadAllFromIndexedDB(): Promise<Record<string, WeddingData>> {
   try {
     const db = await openDatabase();
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const tx = db.transaction(STORE_NAME, 'readonly');
       const store = tx.objectStore(STORE_NAME);
       const result: Record<string, WeddingData> = {};
 
-      if (store.getAll && store.getAllKeys) {
-        const keysReq = store.getAllKeys();
-        const valsReq = store.getAll();
-
-        tx.oncomplete = () => {
-          const keys = keysReq.result as string[];
-          const vals = valsReq.result as WeddingData[];
-          for (let i = 0; i < keys.length; i++) {
-            result[keys[i]] = vals[i];
-          }
+      const cursorReq = store.openCursor();
+      cursorReq.onsuccess = (e) => {
+        const cursor = (e.target as IDBRequest<IDBCursorWithValue>).result;
+        if (cursor) {
+          result[cursor.key as string] = cursor.value;
+          cursor.continue();
+        } else {
           resolve(result);
-        };
-        tx.onerror = () => reject(tx.error);
-      } else {
-        // Fallback for older browsers
-        const cursorReq = store.openCursor();
-        cursorReq.onsuccess = (e) => {
-          const cursor = (e.target as IDBRequest<IDBCursorWithValue>).result;
-          if (cursor) {
-            result[cursor.key as string] = cursor.value;
-            cursor.continue();
-          } else {
-            resolve(result);
-          }
-        };
-        cursorReq.onerror = () => reject(cursorReq.error);
-      }
+        }
+      };
+      cursorReq.onerror = () => {
+        console.warn('IndexedDB cursor error:', cursorReq.error);
+        resolve({});
+      };
     });
   } catch (err) {
     console.warn('IndexedDB read failed:', err);
@@ -127,7 +114,7 @@ export function compressImageFile(
           width = maxDimension;
         } else {
           width = Math.round((width * maxDimension) / height);
-          height = maxDimension;
+          width = maxDimension;
         }
       }
 
@@ -137,7 +124,6 @@ export function compressImageFile(
 
       const ctx = canvas.getContext('2d');
       if (!ctx) {
-        // Fallback to original
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target?.result as string);
         reader.onerror = reject;
@@ -165,25 +151,43 @@ export function compressImageFile(
 }
 
 /**
- * Universal safe saver: Saves to IndexedDB (unlimited) AND attempts localStorage
+ * Universal safe saver:
+ * 1. Saves to IndexedDB (always succeeds, no 5MB quota)
+ * 2. Writes to project files on disk via Vite dev server if on localhost
+ * 3. Attempts safe localStorage fallback
  */
 export async function persistWeddingData(
   templateId: string,
   data: WeddingData,
   allData: Record<string, WeddingData>
 ): Promise<void> {
-  // 1. Save to IndexedDB (always succeeds, no 5MB quota)
+  // 1. Save to IndexedDB
   await saveToIndexedDB(templateId, data);
   if (templateId === 'bodh-heritage' || data.brideName === 'Kajal' || data.groomName === 'Sahil') {
     await saveToIndexedDB('bodh-heritage', data);
   }
 
-  // 2. Safe save to localStorage with quota protection
+  // 2. Automatically sync to local dev server disk if running on localhost
+  if (
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ) {
+    try {
+      fetch('/api/save-wedding-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(allData),
+      }).catch((e) => console.debug('Dev server save endpoint offline:', e));
+    } catch {
+      // ignore
+    }
+  }
+
+  // 3. Safe save to localStorage with quota protection
   try {
     localStorage.setItem(PY_STORAGE_KEY, JSON.stringify(allData));
   } catch (quotaError) {
     console.warn('LocalStorage quota exceeded (safely stored in IndexedDB):', quotaError);
-    // Prune very large base64 strings only from localStorage mirror, leaving IndexedDB intact
     try {
       const lightweightCopy: Record<string, WeddingData> = {};
       for (const [id, suite] of Object.entries(allData)) {
@@ -199,5 +203,21 @@ export async function persistWeddingData(
     } catch {
       // IndexedDB has already persisted everything
     }
+  }
+}
+
+/**
+ * Trigger GitHub Pages live deployment directly from the browser customizer
+ */
+export async function deployLiveToMobile(): Promise<{ success: boolean; message: string }> {
+  try {
+    const res = await fetch('/api/deploy-live', { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      return { success: true, message: '✓ Successfully published live to GitHub Pages!' };
+    }
+    return { success: false, message: json.error || 'Deploy failed' };
+  } catch (err) {
+    return { success: false, message: String(err) };
   }
 }

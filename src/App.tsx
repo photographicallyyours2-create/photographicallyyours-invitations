@@ -33,22 +33,29 @@ import { AdminEditorDrawer } from './components/AdminEditorDrawer';
 import { RoyalGateIntroExperience } from './components/RoyalGateIntroExperience';
 import { loadAllFromIndexedDB, persistWeddingData, PY_STORAGE_KEY } from './utils/storage';
 
+import savedWeddingDataJson from './data/savedWeddingData.json';
+
 type AppView = 'home' | 'catalogue' | 'template-detail' | 'template' | 'enquire';
 
 const loadSavedData = (): Record<string, WeddingData> => {
+  const diskData = (savedWeddingDataJson as Record<string, WeddingData>) || {};
   try {
     const raw = localStorage.getItem(PY_STORAGE_KEY);
     if (raw) {
-      return JSON.parse(raw);
+      const local = JSON.parse(raw);
+      return {
+        ...diskData,
+        ...local,
+      };
     }
   } catch (e) {
     console.warn('Could not read saved wedding data from localStorage', e);
   }
-  return {};
+  return diskData;
 };
 
 export function App() {
-  // Store customized data per template ID in state (hydrated by IndexedDB & localStorage)
+  // Store customized data per template ID in state (hydrated by saved disk data, IndexedDB & localStorage)
   const [customizedData, setCustomizedData] = useState<Record<string, WeddingData>>(loadSavedData);
   const [currentView, setCurrentView] = useState<AppView>('template');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('bodh-heritage');
@@ -69,7 +76,7 @@ export function App() {
   }, []);
 
   const getActiveWeddingData = (): WeddingData => {
-    const raw = customizedData[activeTemplateId];
+    const raw = customizedData[activeTemplateId] || customizedData['bodh-heritage'];
     const defaultData = getTemplateDefaultData(activeTemplateId);
     if (!raw) return defaultData;
     return {
@@ -86,18 +93,20 @@ export function App() {
   };
 
   const handleUpdateData = (newData: WeddingData) => {
-    setCustomizedData((prev) => {
-      const updated = {
-        ...prev,
-        [activeTemplateId]: newData,
-      };
-      if (activeTemplateId === 'bodh-heritage' || newData.brideName === 'Kajal' || newData.groomName === 'Sahil') {
-        updated['bodh-heritage'] = newData;
-      }
-      // Save permanently to both IndexedDB (unlimited) and localStorage
-      persistWeddingData(activeTemplateId, newData, updated);
-      return updated;
-    });
+    const updated = {
+      ...customizedData,
+      [activeTemplateId]: newData,
+    };
+    if (
+      activeTemplateId === 'bodh-heritage' ||
+      newData.brideName === 'Kajal' ||
+      newData.groomName === 'Sahil'
+    ) {
+      updated['bodh-heritage'] = newData;
+    }
+    setCustomizedData(updated);
+    // Save to IndexedDB, LocalStorage, and POST to Vite disk file
+    persistWeddingData(activeTemplateId, newData, updated);
   };
 
   // Synchronize router state with URL hash

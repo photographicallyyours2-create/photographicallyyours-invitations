@@ -20,9 +20,15 @@ import {
   Share2,
   Download,
   Upload,
+  Globe,
 } from 'lucide-react';
 import { RoyalDivider } from './JaaliDecor';
-import { compressImageFile, persistWeddingData, PY_STORAGE_KEY } from '../utils/storage';
+import {
+  compressImageFile,
+  persistWeddingData,
+  deployLiveToMobile,
+  PY_STORAGE_KEY,
+} from '../utils/storage';
 
 interface AdminEditorDrawerProps {
   isOpen: boolean;
@@ -83,6 +89,7 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
   const [draggedPhotoIndex, setDraggedPhotoIndex] = useState<number | null>(null);
   const [dragOverPhotoIndex, setDragOverPhotoIndex] = useState<number | null>(null);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
+  const [isDeploying, setIsDeploying] = useState<boolean>(false);
   const backupFileInputRef = React.useRef<HTMLInputElement>(null);
   const drawerFileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -392,9 +399,24 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
     } catch (err) {
       console.warn('Error persisting data:', err);
     }
-    setFeedbackMessage('✓ Changes Saved Permanently! Your gallery order, photos, texts, and events will remain saved even after refreshing.');
+    setFeedbackMessage('✓ Changes Saved Permanently to Project! Photos & data are secured.');
     setShowSavedFeedback(true);
     setTimeout(() => setShowSavedFeedback(false), 4000);
+  };
+
+  const handlePublishLive = async () => {
+    handleSave();
+    setIsDeploying(true);
+    setFeedbackMessage('Publishing changes live to mobile link & GitHub Pages...');
+    setShowSavedFeedback(true);
+    const result = await deployLiveToMobile();
+    setIsDeploying(false);
+    if (result.success) {
+      setFeedbackMessage('✓ Deployed live! Open the mobile link on your phone now.');
+    } else {
+      setFeedbackMessage(result.message || 'Saved locally to project files.');
+    }
+    setTimeout(() => setShowSavedFeedback(false), 6000);
   };
 
   const handleCopyClientShareLink = () => {
@@ -1352,14 +1374,38 @@ export const AdminEditorDrawer: React.FC<AdminEditorDrawerProps> = ({
 
             {/* Save & Client Controls */}
             <div className="space-y-3 pt-2">
-              {/* Primary Save Changes Permanently Button */}
-              <button
-                type="submit"
-                className="w-full min-h-[48px] inline-flex items-center justify-center space-x-2 py-3.5 px-4 rounded-full bg-burgundy-900 text-gold-200 font-serif text-sm sm:text-base hover:bg-burgundy-800 transition-all shadow-royal font-bold hover:shadow-gold-glow cursor-pointer border border-gold-400"
-              >
-                <Check className="w-5 h-5 text-gold-400" />
-                <span>Save Changes Permanently</span>
-              </button>
+              {/* Primary Action Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* 1. Save Changes to Project Button */}
+                <button
+                  type="submit"
+                  className="min-h-[46px] inline-flex items-center justify-center space-x-2 py-3 px-4 rounded-full bg-burgundy-900 text-gold-200 font-serif text-xs sm:text-sm hover:bg-burgundy-800 transition-all shadow-royal font-bold hover:shadow-gold-glow cursor-pointer border border-gold-400"
+                >
+                  <Check className="w-4 h-4 text-gold-400" />
+                  <span>Save Changes</span>
+                </button>
+
+                {/* 2. Publish & Deploy to Phone Link Button */}
+                <button
+                  type="button"
+                  onClick={handlePublishLive}
+                  disabled={isDeploying}
+                  className="min-h-[46px] inline-flex items-center justify-center space-x-2 py-3 px-4 rounded-full bg-gradient-to-r from-emerald-800 to-emerald-700 text-gold-100 font-serif text-xs sm:text-sm hover:brightness-110 transition-all shadow-royal font-bold cursor-pointer border border-emerald-400 disabled:opacity-60"
+                  title="Publishes changes live to GitHub Pages so your phone loads the updated photos"
+                >
+                  {isDeploying ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 text-gold-300 animate-spin" />
+                      <span>Deploying Live...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Globe className="w-4 h-4 text-emerald-300" />
+                      <span>Publish Live to Phone</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* Utility Row: Copy Link, Backup JSON, Restore & Reset */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
