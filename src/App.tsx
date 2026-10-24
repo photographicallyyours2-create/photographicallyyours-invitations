@@ -50,9 +50,9 @@ const loadSavedData = (): Record<string, WeddingData> => {
 export function App() {
   // Store customized data per template ID in state (hydrated by IndexedDB & localStorage)
   const [customizedData, setCustomizedData] = useState<Record<string, WeddingData>>(loadSavedData);
-  const [currentView, setCurrentView] = useState<AppView>('home');
-  const [activeTemplateId, setActiveTemplateId] = useState<string>('royal-heirloom');
-  const [enquiryTemplateId, setEnquiryTemplateId] = useState<string>('royal-heirloom');
+  const [currentView, setCurrentView] = useState<AppView>('template');
+  const [activeTemplateId, setActiveTemplateId] = useState<string>('bodh-heritage');
+  const [enquiryTemplateId, setEnquiryTemplateId] = useState<string>('bodh-heritage');
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
 
@@ -127,7 +127,12 @@ export function App() {
         return;
       }
 
-      if (decodedHash === '#/photographicallyyours' || decodedHash === '#/py') {
+      if (
+        decodedHash === '#/studio' ||
+        decodedHash === '#/home' ||
+        decodedHash === '#/photographicallyyours' ||
+        decodedHash === '#/py'
+      ) {
         setCurrentView('home');
         document.title = 'Photographically Yours | Luxury Bespoke Wedding Invitations';
         return;
@@ -172,9 +177,11 @@ export function App() {
         return;
       }
 
-      // Default route: Studio Homepage
-      setCurrentView('home');
-      document.title = 'Photographically Yours | Luxury Bespoke Wedding Invitations';
+      // Default route for all guests (desktop & mobile):
+      // Sahil & Kajal Bodh Heritage Royal Wedding Invitation with Palace Gate Opening!
+      setActiveTemplateId('bodh-heritage');
+      setCurrentView('template');
+      document.title = 'Sahil & Kajal Wedding Invitation | Photographically Yours';
     };
 
     parseHash();

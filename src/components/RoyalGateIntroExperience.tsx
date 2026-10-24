@@ -20,12 +20,12 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
   const [phase, setPhase] = useState<'sealed' | 'opening' | 'dissolving' | 'dismissed'>(
     externalIsOpen ? 'dismissed' : 'sealed'
   );
-  const [isVideoReady, setIsVideoReady] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const rawBase = import.meta.env.BASE_URL || './';
   const cleanBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
@@ -39,27 +39,23 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
     }
   }, [externalIsOpen, phase]);
 
-  // Handle video ready state
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoadedData = () => setIsVideoReady(true);
-    if (video.readyState >= 2) {
-      setIsVideoReady(true);
-    } else {
-      video.addEventListener('loadeddata', handleLoadedData);
+  const handleStartGateOpening = async (e?: React.SyntheticEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
-
-    return () => {
-      video.removeEventListener('loadeddata', handleLoadedData);
-    };
-  }, []);
-
-  const handleStartGateOpening = async () => {
     if (phase !== 'sealed') return;
 
-    // 1. Trigger celebratory golden sparkle confetti
+    // 1. Start audio playback immediately on user gesture (iOS Safari requirement)
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => console.warn('Audio waiting for interaction:', err));
+    }
+
+    // 2. Trigger celebratory golden sparkle confetti
     try {
       confetti({
         particleCount: 65,
@@ -73,17 +69,16 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
       // ignore
     }
 
-    // 2. Start audio playback
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current
-        .play()
-        .then(() => setIsMusicPlaying(true))
-        .catch((e) => console.warn('Audio waiting for interaction:', e));
-    }
-
     // 3. Enter opening phase: play the palace gate opening video
     setPhase('opening');
+
+    // 4. Guaranteed Safety Watchdog Timer:
+    // Even if mobile network buffers video or onEnded doesn't fire on iOS,
+    // seamlessly dissolve into the wedding invitation within 3.6s
+    if (watchdogRef.current) clearTimeout(watchdogRef.current);
+    watchdogRef.current = setTimeout(() => {
+      handleGateEnded();
+    }, 3600);
 
     if (videoRef.current) {
       try {
@@ -91,16 +86,19 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
         await videoRef.current.play();
       } catch (err) {
         console.warn('Video autoplay restriction, transitioning gracefully:', err);
-        // Fallback after 2.5s if video restricted
-        setTimeout(handleGateEnded, 2500);
+        if (watchdogRef.current) clearTimeout(watchdogRef.current);
+        setTimeout(handleGateEnded, 1500);
       }
-    } else {
-      setTimeout(handleGateEnded, 2500);
     }
   };
 
   const handleGateEnded = () => {
-    // 4. Dissolve phase: Video & gate frame dissolves smoothly into the wedding invitation
+    if (watchdogRef.current) {
+      clearTimeout(watchdogRef.current);
+      watchdogRef.current = null;
+    }
+
+    // Dissolve phase: Video & gate frame dissolves smoothly into the wedding invitation
     setPhase('dissolving');
 
     setTimeout(() => {
@@ -108,7 +106,7 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
       if (onOpenComplete) {
         onOpenComplete();
       }
-    }, 850);
+    }, 750);
   };
 
   const handleToggleAudio = () => {
@@ -237,30 +235,32 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
           } bg-[#120406]`}
         >
           {/* Background Palace Gate Video Container */}
-          <div className="absolute inset-0 w-full h-full overflow-hidden select-none">
+          <div className="absolute inset-0 w-full h-full overflow-hidden select-none pointer-events-none">
             <video
               ref={videoRef}
               src={videoSrc}
               playsInline
+              {...({ 'webkit-playsinline': 'true' } as React.HTMLAttributes<HTMLVideoElement>)}
               preload="auto"
               muted
               onEnded={handleGateEnded}
-              className={`w-full h-full object-cover object-center transform scale-[1.002] transition-opacity duration-700 ${
-                isVideoReady ? 'opacity-100' : 'opacity-0'
-              }`}
+              className="w-full h-full object-cover object-center transform scale-[1.002] transition-opacity duration-700 opacity-100"
             />
-            {/* Cinematic Radial Vignette Gradient Overlay */}
+            {/* Cinematic Gradient Overlay */}
             <div
-              className={`absolute inset-0 bg-radial-at-c from-black/20 via-[#180509]/75 to-[#0D0204]/95 pointer-events-none transition-opacity duration-1000 ${
-                phase === 'opening' ? 'opacity-30' : 'opacity-85'
+              className={`absolute inset-0 bg-gradient-to-b from-black/40 via-[#180509]/60 to-[#0D0204]/90 pointer-events-none transition-opacity duration-1000 ${
+                phase === 'opening' ? 'opacity-20' : 'opacity-80'
               }`}
             />
           </div>
 
-          {/* Centered AR Royal Wax Seal Medallion */}
-          <div
+          {/* Centered AR Royal Wax Seal Medallion Button */}
+          <button
+            type="button"
             onClick={handleStartGateOpening}
-            className={`relative z-20 flex flex-col items-center justify-center cursor-pointer select-none text-center transform transition-all duration-700 group ${
+            onTouchEnd={handleStartGateOpening}
+            aria-label="Tap to Open Royal Wedding Invitation"
+            className={`relative z-20 flex flex-col items-center justify-center cursor-pointer select-none text-center transform transition-all duration-700 group bg-transparent border-0 outline-none p-0 touch-manipulation active:scale-95 ${
               phase === 'opening' || phase === 'dissolving'
                 ? 'opacity-0 scale-125 pointer-events-none'
                 : 'opacity-100 scale-100'
@@ -268,7 +268,7 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
           >
             {/* Pulsating Golden Aura Rings */}
             <div className="absolute -inset-6 rounded-full bg-[#D4AF37]/20 blur-md animate-ping pointer-events-none" />
-            <div className="absolute -inset-2 rounded-full bg-[#D4AF37]/35 blur-xs animate-pulse pointer-events-none" />
+            <div className="absolute -inset-2 rounded-full bg-[#D4AF37]/35 blur-sm animate-pulse pointer-events-none" />
 
             {/* Embossed Royal Wax Seal Disc */}
             <div className="w-36 h-36 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full bg-gradient-to-br from-[#8C1B2A] via-[#5A0F1B] to-[#2B050B] border-2 sm:border-4 border-[#D4AF37] flex flex-col items-center justify-center shadow-[0_16px_36px_rgba(0,0,0,0.8),0_0_35px_rgba(212,175,55,0.45)] group-hover:scale-105 active:scale-95 transition-transform duration-300 relative overflow-hidden">
@@ -301,7 +301,7 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
             <p className="text-[10px] sm:text-xs text-cream-200/60 font-sans tracking-widest uppercase mt-1">
               Royal Gate Opening • {data.brideName} &amp; {data.groomName}
             </p>
-          </div>
+          </button>
 
           {/* Bottom Hallmark — Sans-serif font, at bottom, slightly visible not too much slight to be ignored */}
           <div className="absolute bottom-3 sm:bottom-5 inset-x-0 flex flex-col items-center justify-center pointer-events-none z-20 px-4 text-center">
