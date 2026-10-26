@@ -16,6 +16,21 @@ export const RoyalImage: React.FC<RoyalImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const rawBase = import.meta.env.BASE_URL || './';
+  const cleanBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+  const resolvedSrc =
+    !src ||
+    src.startsWith('http://') ||
+    src.startsWith('https://') ||
+    src.startsWith('data:') ||
+    src.startsWith('blob:')
+      ? src
+      : src.startsWith('/')
+      ? `${cleanBase}${src.slice(1)}`
+      : src.startsWith('./')
+      ? `${cleanBase}${src.slice(2)}`
+      : `${cleanBase}${src}`;
+
   return (
     <div className={`relative overflow-hidden bg-cream-200 ${containerClassName}`}>
       {/* Loading Shimmer Skeleton */}
@@ -28,7 +43,7 @@ export const RoyalImage: React.FC<RoyalImageProps> = ({
       {/* Actual Image */}
       {!hasError ? (
         <img
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}

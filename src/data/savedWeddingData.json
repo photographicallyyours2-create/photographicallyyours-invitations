@@ -1,1 +1,223 @@
-{}
+{
+  "bodh-heritage": {
+    "brideName": "Kajal",
+    "groomName": "Sahil",
+    "monogram": "S & K",
+    "weddingDateFormatted": "November 20 – 22, 2026",
+    "weddingDateIso": "2026-11-20T19:00:00+05:30",
+    "venueCity": "New Delhi",
+    "primaryVenue": "Andaaj Mansion Banquet & Hotel Surya Grand",
+    "hashtag": "#SahilWedsKajal",
+    "rsvpDeadline": "November 10, 2026",
+    "invocation": "॥ श्री गणेशाय नमः ॥",
+    "shlokas": [
+      "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभः । निर्विघ्नं कुरुमे देव सर्वकार्येषु सर्वदा ॥",
+      "विघ्न हरण मंगल करण, श्री गणपति महाराज । प्रथम निमंत्रण आपको, पूरन करियो काज ॥"
+    ],
+    "quote": "Destiny brought them together and now love will seal their bond......forever",
+    "invitationOpening": "With the divine blessings of our revered ancestors and elders, we cordially invite you to celebrate the wedding ceremonies of",
+    "welcomeNote": "Destiny brought them together and now love will seal their bond......forever. We warmly request your auspicious presence and blessings as Sahil & Kajal unite in sacred matrimony.",
+    "grandparentsGroom": "Grand S/o Late Smt. Raj Kumari & Late Sh. Vishnu Bhagwan",
+    "parentsGroom": "Son of Smt. Sunila & Sh. Rajeev Arora",
+    "parentsBride": "Daughter of Smt. Veena & Sh. Jagdish Tuteja",
+    "residenceAddress": "H. No.- C-96, Moti Nagar, New Delhi-110015",
+    "rsvpContacts": [
+      {
+        "name": "Arora Family",
+        "relation": "Groom Family",
+        "phone": "+91 99102 62576",
+        "whatsappMessage": "Dear Arora Family, Heartiest congratulations on Sahil & Kajal’s wedding! Delighted to confirm our attendance."
+      },
+      {
+        "name": "Arora Family",
+        "relation": "Groom Family",
+        "phone": "+91 96506 60968",
+        "whatsappMessage": "Dear Arora Family, Heartiest congratulations on Sahil & Kajal’s wedding! Delighted to confirm our attendance."
+      },
+      {
+        "name": "Makkar Family",
+        "relation": "RSVP Coordination",
+        "phone": "+91 99998 81688",
+        "whatsappMessage": "Dear Makkar Family, Heartiest congratulations on Sahil & Kajal’s wedding! Delighted to confirm our attendance."
+      }
+    ],
+    "complimentsFrom": "With Best Compliments From: Narang Family, All Relatives & Friends",
+    "story": [
+      {
+        "year": "Destiny",
+        "title": "Destiny Brought Them Together",
+        "text": "What began with family introductions and heartfelt conversations soon grew into deep respect, gentle laughter, and a profound mutual understanding."
+      },
+      {
+        "year": "Blessings",
+        "title": "Two Families, One Sacred Harmony",
+        "text": "With the heartfelt love and sacred blessings of the Arora and Tuteja families, two worlds aligned in lifelong kinship and devotion."
+      },
+      {
+        "year": "Forever",
+        "title": "Now Love Will Seal Their Bond",
+        "text": "Surrounded by the warmth of elders, family, and lifelong friends, Sahil and Kajal take their sacred seven vows for a lifetime of togetherness."
+      }
+    ],
+    "events": [
+      {
+        "id": "sagan-ring",
+        "title": "Sagan & Ring Ceremony",
+        "hindiTitle": "सगन एवं सगाई समारोह",
+        "subTitle": "Ceremony of Rings, Cocktails & Gala Banquet",
+        "date": "Friday, 20th November, 2026",
+        "time": "07:00 PM: Sagan Ceremony onwards | 09:00 PM: Dinner & Cocktail onwards",
+        "venueName": "Hotel Surya Grand",
+        "venueAddress": "Community Centre, J-14, Near MKW Hospital, Rajouri Garden, New Delhi-110027",
+        "attire": "Evening Elegance / Cocktail Festive",
+        "attireColorHint": "Wine burgundy, royal gold & jewel tones",
+        "description": "The auspicious ring exchange followed by celebratory cocktails, live musical entertainment, and a lavish dinner banquet.",
+        "image": "assets/images/cinematic/05_sangeet_fairy_lights.jpg",
+        "mapQuery": "Hotel Surya Grand, Community Centre, J-14, Rajouri Garden, New Delhi 110027",
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hotel+Surya+Grand+Community+Centre+J-14+Rajouri+Garden+New+Delhi+110027",
+        "calendarDateStart": "20261120T133000Z",
+        "calendarDateEnd": "20261120T183000Z"
+      },
+      {
+        "id": "haldi",
+        "title": "Haldi Ceremony",
+        "hindiTitle": "शुभ हल्दी समारोह",
+        "subTitle": "Auspicious Turmeric, Marigold Showers & Folk Songs",
+        "date": "Sunday, 22nd November, 2026",
+        "time": "11:00 AM onwards",
+        "venueName": "Arora Residence",
+        "venueAddress": "H. No.- C-96, Moti Nagar, New Delhi-110015",
+        "attire": "Haldi Yellows & Marigold Festive Attire",
+        "attireColorHint": "Shades of sunshine, saffron & marigold",
+        "description": "The sacred turmeric ritual with cooling marigold petal showers, accompanied by auspicious Mangal geet and festive regional delicacies.",
+        "image": "assets/images/cinematic/04_haldi_courtyard.jpg",
+        "mapQuery": "C-96 Moti Nagar New Delhi 110015",
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=C-96+Moti+Nagar+New+Delhi+110015",
+        "calendarDateStart": "20261122T053000Z",
+        "calendarDateEnd": "20261122T083000Z"
+      },
+      {
+        "id": "sehra-bandi",
+        "title": "Sehra Bandi & Departure of Barat",
+        "hindiTitle": "सेहरा बंदी एवं बारात प्रस्थान",
+        "subTitle": "Turban Rites, Dhol Beats & Procession",
+        "date": "Sunday, 22nd November, 2026",
+        "time": "06:00 PM: Sehra Bandi | 07:00 PM: Departure of Barat",
+        "venueName": "Arora Residence",
+        "venueAddress": "H. No.- C-96, Moti Nagar, New Delhi-110015",
+        "attire": "Traditional Kurta Pajama / Bandhgala / Festive Silks",
+        "attireColorHint": "Royal pastels, saffron & traditional silks",
+        "description": "Auspicious tying of the royal sehra at the Arora residence, followed by spirited dhol beats and the joyous departure of the groom’s procession.",
+        "note": "The Barat will reassemble near Andaaj Mansion Banquet at 8:00 pm & will proceed to venue.",
+        "image": "assets/images/cinematic/06_baarat_chariot_fireworks.jpg",
+        "mapQuery": "C-96 Moti Nagar New Delhi 110015",
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=C-96+Moti+Nagar+New+Delhi+110015",
+        "calendarDateStart": "20261122T123000Z",
+        "calendarDateEnd": "20261122T140000Z"
+      },
+      {
+        "id": "wedding",
+        "title": "Shubh Vivah / Varmala & Vedic Pheras",
+        "hindiTitle": "शुभ विवाह, वरमाला एवं सात फेरे",
+        "subTitle": "The Sacred Seven Vows & Grand Wedding Feast",
+        "date": "Sunday, 22nd November, 2026",
+        "time": "08:00 PM: Barat Reassembly | 09:15 PM onwards: Varmala, Vedic Pheras & Wedding Banquet",
+        "venueName": "Andaaj Mansion Banquet",
+        "venueAddress": "63, Rama Road, opp. Kirti Nagar Metro Station, New Delhi-110015",
+        "attire": "Regal Traditional Indian / Sherwanis & Lehengas",
+        "attireColorHint": "Royal crimson, antique ivory & gold",
+        "description": "Reassembly and grand entry of the Barat, starlit floral Varmala, auspicious Vedic pheras around the holy fire, and a royal celebratory feast.",
+        "note": "Barat will reassemble near Andaaj Mansion Banquet at 8:00 PM and proceed to the venue.",
+        "image": "assets/images/cinematic/07_wedding_mandap_moonlight.jpg",
+        "mapQuery": "Andaaj Mansion Banquet 63 Rama Road Kirti Nagar New Delhi 110015",
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=Andaaj+Mansion+Banquet+63+Rama+Road+Kirti+Nagar+New+Delhi+110015",
+        "calendarDateStart": "20261122T143000Z",
+        "calendarDateEnd": "20261122T203000Z"
+      }
+    ],
+    "gallery": [
+      {
+        "id": "photo-sk-1",
+        "src": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Sahil & Kajal Royal Wedding Portrait",
+        "caption": "In sacred harmony — Sahil & Kajal",
+        "location": "New Delhi",
+        "spanClass": "md:col-span-2 md:row-span-2"
+      },
+      {
+        "id": "photo-sk-crest",
+        "src": "assets/images/cinematic/02_peacock_crest.jpg",
+        "alt": "Royal Peacock Monogram Crest",
+        "caption": "The Royal Peacock Monogram Crest of Sahil & Kajal",
+        "location": "Palace Courtyard",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-walk",
+        "src": "assets/images/cinematic/03_couple_garden_walk.jpg",
+        "alt": "Colonnade Palace Walk",
+        "caption": "Lantern-lit royal palace gardens & colonnade",
+        "location": "Arora & Tuteja Family Union",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-haldi",
+        "src": "assets/images/cinematic/04_haldi_courtyard.jpg",
+        "alt": "Haldi Courtyard with Marigolds",
+        "caption": "Haldi Ceremony — Auspicious turmeric & yellow marigold courtyard",
+        "location": "Arora Residence, Moti Nagar",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-sangeet",
+        "src": "assets/images/cinematic/05_sangeet_fairy_lights.jpg",
+        "alt": "Sagan & Sangeet Fairy Lights Canopy",
+        "caption": "Sagan & Ring Ceremony under glowing fairy lights & crystal chandeliers",
+        "location": "Hotel Surya Grand, Rajouri Garden",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-6",
+        "src": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Sahil and Kajal walking together",
+        "caption": "Two souls united for seven lifetimes",
+        "location": "New Delhi",
+        "spanClass": "md:col-span-2 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-7",
+        "src": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80",
+        "alt": "Sehra Bandi & Auspicious Turban Rites",
+        "caption": "Auspicious Sehra Bandi and family blessings",
+        "location": "Arora Residence, Moti Nagar",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-8",
+        "src": "https://images.unsplash.com/photo-1509927083803-4bd519298ac4?auto=format&fit=crop&w=800&q=80",
+        "alt": "Celebratory Sangeet Night & Dhol",
+        "caption": "Joyous dhol beats, music & gala dancing",
+        "location": "Hotel Surya Grand",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-9",
+        "src": "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80",
+        "alt": "Starlit Floral Varmala Garland Exchange",
+        "caption": "The sacred floral garland exchange under the stars",
+        "location": "Andaaj Mansion Banquet",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      },
+      {
+        "id": "photo-sk-10",
+        "src": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
+        "alt": "Grand Wedding Banquet & Hospitality",
+        "caption": "Celebrating the union of the Arora & Tuteja families",
+        "location": "Andaaj Mansion Banquet, New Delhi",
+        "spanClass": "md:col-span-1 md:row-span-1"
+      }
+    ],
+    "contactPhone": "+91 99102 62576",
+    "contactEmail": "sahilwedskajal2026@gmail.com"
+  }
+}

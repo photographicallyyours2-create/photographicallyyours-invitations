@@ -31,6 +31,7 @@ import { PastelCourtyardTemplate } from './templates/PastelCourtyardTemplate';
 // Global Helpers
 import { AdminEditorDrawer } from './components/AdminEditorDrawer';
 import { RoyalGateIntroExperience } from './components/RoyalGateIntroExperience';
+import { CinematicInviteExperience } from './components/CinematicInviteExperience';
 import { loadAllFromIndexedDB, persistWeddingData, PY_STORAGE_KEY } from './utils/storage';
 
 import savedWeddingDataJson from './data/savedWeddingData.json';
@@ -62,6 +63,7 @@ export function App() {
   const [enquiryTemplateId, setEnquiryTemplateId] = useState<string>('bodh-heritage');
   const [viewportMode, setViewportMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
+  const [isCinematicModalOpen, setIsCinematicModalOpen] = useState<boolean>(false);
 
   // Hydrate permanently saved photos & data from IndexedDB on startup
   useEffect(() => {
@@ -116,6 +118,20 @@ export function App() {
       const pathname = window.location.pathname.toLowerCase();
       const rawHash = window.location.hash || '#/';
       const decodedHash = decodeURIComponent(rawHash).toLowerCase().trim();
+
+      // Dedicated Cinematic Animated Video Invite Route
+      if (
+        decodedHash.includes('cinematic') ||
+        decodedHash.includes('video') ||
+        decodedHash.includes('story') ||
+        decodedHash.includes('e-invite')
+      ) {
+        setActiveTemplateId('bodh-heritage');
+        setCurrentView('template');
+        setIsCinematicModalOpen(true);
+        document.title = 'Sahil & Kajal Animated Wedding Invitation | Photographically Yours';
+        return;
+      }
 
       // Clean Subdomain & Client Routes
       // e.g. sahil-kajal.photographicallyyours.com, sahil-kajal.photographicallyyours.in,
@@ -324,6 +340,7 @@ export function App() {
             data={currentWeddingData}
             onOpenAdmin={() => setIsAdminOpen(true)}
             onUpdateData={handleUpdateData}
+            onWatchCinematic={() => setIsCinematicModalOpen(true)}
           />
         );
       case 'shloka-royale':
@@ -459,8 +476,16 @@ export function App() {
       {currentView === 'template' && (
         <RoyalGateIntroExperience
           data={getActiveWeddingData()}
+          onWatchCinematic={() => setIsCinematicModalOpen(true)}
         />
       )}
+
+      {/* Dedicated Fullscreen Cinematic Animated E-Invite Experience Modal */}
+      <CinematicInviteExperience
+        data={getActiveWeddingData()}
+        isOpen={isCinematicModalOpen}
+        onClose={() => setIsCinematicModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { WeddingData } from '../types/wedding';
 import confetti from 'canvas-confetti';
-import { Music, Volume2, VolumeX } from 'lucide-react';
+import { Music, Volume2, VolumeX, Sparkles } from 'lucide-react';
 
 interface RoyalGateIntroExperienceProps {
   data: WeddingData;
   onOpenComplete?: () => void;
   isOpen?: boolean;
   onReopen?: () => void;
+  onWatchCinematic?: () => void;
 }
 
 export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> = ({
@@ -15,6 +16,7 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
   onOpenComplete,
   isOpen: externalIsOpen,
   onReopen,
+  onWatchCinematic,
 }) => {
   // Phase lifecycle: 'sealed' -> 'opening' -> 'dissolving' -> 'dismissed'
   const [phase, setPhase] = useState<'sealed' | 'opening' | 'dissolving' | 'dismissed'>(
@@ -30,7 +32,7 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
   const rawBase = import.meta.env.BASE_URL || './';
   const cleanBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
   const videoSrc = `${cleanBase}assets/video/royal_gate_intro.mp4`;
-  const audioSrc = `${cleanBase}assets/media/wedding_music.mp3`;
+  const audioSrc = `${cleanBase}assets/media/cinematic_invite_audio.mp3`;
 
   // Sync external isOpen prop if provided
   useEffect(() => {
@@ -209,9 +211,9 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
         </button>
       </div>
 
-      {/* Floating Re-play Palace Gate Experience Button */}
+      {/* Floating Re-play Palace Gate Experience Button & Watch Animated Invite */}
       {phase === 'dismissed' && (
-        <div className="fixed bottom-16 sm:bottom-20 left-4 sm:left-6 z-40">
+        <div className="fixed bottom-16 sm:bottom-20 left-4 sm:left-6 z-40 flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <button
             onClick={handleReopenGate}
             className="px-3.5 py-1.5 rounded-full bg-[#1A0910]/85 text-gold-300/80 hover:text-gold-100 border border-[#D4AF37]/40 shadow-royal hover:scale-105 active:scale-95 transition-all text-[11px] font-sans tracking-wider flex items-center space-x-1.5 backdrop-blur-md cursor-pointer"
@@ -220,6 +222,16 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
             <span>🏛</span>
             <span>Re-open Palace Gate</span>
           </button>
+          {onWatchCinematic && (
+            <button
+              onClick={onWatchCinematic}
+              className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C29B38] text-burgundy-950 font-serif font-bold shadow-xl hover:scale-105 active:scale-95 transition-all text-[11px] tracking-wider flex items-center space-x-1.5 cursor-pointer border border-gold-400"
+              title="Watch Animated E-Invite Video Story"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Watch Animated Invite</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -302,6 +314,26 @@ export const RoyalGateIntroExperience: React.FC<RoyalGateIntroExperienceProps> =
               Royal Gate Opening • {data.brideName} &amp; {data.groomName}
             </p>
           </button>
+
+          {/* Direct Option to Watch Full Animated Video Story */}
+          {onWatchCinematic && (
+            <div
+              className={`relative z-20 mt-4 transition-all duration-700 ${
+                phase === 'opening' || phase === 'dissolving'
+                  ? 'opacity-0 scale-90 pointer-events-none'
+                  : 'opacity-100 scale-100'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={onWatchCinematic}
+                className="px-4 sm:px-5 py-2 rounded-full bg-[#1A0910]/90 hover:bg-[#2A101A] border border-[#D4AF37]/80 text-gold-200 hover:text-white text-xs font-serif tracking-wider uppercase inline-flex items-center space-x-2 shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                <span>❖ Watch Animated E-Invite Video ❖</span>
+              </button>
+            </div>
+          )}
 
           {/* Bottom Hallmark — Sans-serif font, at bottom, slightly visible not too much slight to be ignored */}
           <div className="absolute bottom-3 sm:bottom-5 inset-x-0 flex flex-col items-center justify-center pointer-events-none z-20 px-4 text-center">

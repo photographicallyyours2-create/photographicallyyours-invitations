@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { WeddingEvent } from '../types/wedding';
 import { RoyalDivider } from './JaaliDecor';
 import { DirectionsModal } from './DirectionsModal';
+import { RoyalImage } from './RoyalImage';
 import { Calendar, Clock, MapPin, Sparkles, Navigation, CalendarPlus } from 'lucide-react';
 
 interface EventsScheduleProps {
@@ -84,6 +85,19 @@ export const EventsSchedule: React.FC<EventsScheduleProps> = ({
               {isMainCeremony && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-burgundy-900 text-gold-200 text-[10px] sm:text-[11px] font-serif uppercase tracking-widest px-3 sm:px-4 py-1 rounded-full border border-gold-400 shadow-sm whitespace-nowrap">
                   Sacred Auspicious Vows
+                </div>
+              )}
+
+              {/* Event Scenic Illustration Banner */}
+              {event.image && (
+                <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-2xl sm:rounded-t-3xl border-b border-gold-300/40 bg-cream-200">
+                  <RoyalImage
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700"
+                    containerClassName="w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
               )}
 
