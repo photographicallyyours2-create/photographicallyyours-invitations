@@ -954,6 +954,8 @@ export const getTemplateDefaultData = (templateId: string): WeddingData => {
       return akashRashmiData;
     case 'pastel-courtyard':
       return radhikaPriyanshData;
+    case 'garden-royale':
+      return sagarNidhiData;
     default:
       return initialWeddingData;
   }

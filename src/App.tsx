@@ -76,7 +76,7 @@ export function App() {
   }, []);
 
   const getActiveWeddingData = (): WeddingData => {
-    const raw = customizedData[activeTemplateId] || customizedData['bodh-heritage'];
+    const raw = customizedData[activeTemplateId];
     const defaultData = getTemplateDefaultData(activeTemplateId);
     if (!raw) return defaultData;
     return {
@@ -455,8 +455,8 @@ export function App() {
         onUpdateData={handleUpdateData}
       />
 
-      {/* Interactive Royal Palace Gate Opening Experience with Dissolve Transition & Wedding Track */}
-      {currentView === 'template' && (
+      {/* Interactive Royal Palace Gate Opening Experience with Dissolve Transition & Wedding Track (Exclusively for Sahil & Kajal's Bodh Heritage Suite) */}
+      {currentView === 'template' && activeTemplateId === 'bodh-heritage' && (
         <RoyalGateIntroExperience
           data={getActiveWeddingData()}
         />
