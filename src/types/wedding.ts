@@ -19,7 +19,6 @@ export interface WeddingEvent {
   mapQuery: string;
   mapUrl?: string; // Direct Google Maps navigation URL
   note?: string; // Special program or procession note
-  image?: string; // Event artwork or scenic illustration
   calendarDateStart: string; // ISO 8601 for calendar integration
   calendarDateEnd: string;
 }

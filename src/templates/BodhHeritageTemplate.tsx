@@ -24,34 +24,22 @@ import {
   Sliders,
 } from 'lucide-react';
 import { CountdownTimer } from '../components/CountdownTimer';
-import { CinematicInviteExperience } from '../components/CinematicInviteExperience';
 
 interface BodhHeritageTemplateProps {
   data: WeddingData;
   onOpenAdmin: () => void;
   onUpdateData?: (newData: WeddingData) => void;
-  onWatchCinematic?: () => void;
 }
 
 export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
   data,
   onOpenAdmin,
   onUpdateData,
-  onWatchCinematic,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
   const [isQuickEditOpen, setIsQuickEditOpen] = useState(false);
   const [quickSaved, setQuickSaved] = useState(false);
-  const [internalCinematicOpen, setInternalCinematicOpen] = useState(false);
-
-  const handleOpenCinematic = () => {
-    if (onWatchCinematic) {
-      onWatchCinematic();
-    } else {
-      setInternalCinematicOpen(true);
-    }
-  };
 
   const handleScrollDown = () => {
     contentRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -178,15 +166,6 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
 
           {/* Quick Action Navigation Bar */}
           <div className="mt-5 sm:mt-6 pt-4 border-t border-[#C29B38]/30 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              onClick={handleOpenCinematic}
-              className="min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F5E6C8] to-[#C29B38] text-burgundy-950 font-serif text-xs sm:text-sm tracking-wider uppercase font-bold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2 border border-gold-400 cursor-pointer animate-pulse"
-            >
-              <Sparkles className="w-4 h-4 text-burgundy-900" />
-              <span>❖ Watch Animated E-Invite ❖</span>
-            </button>
-
             <button
               type="button"
               onClick={() => setIsQuickEditOpen(true)}
@@ -601,13 +580,6 @@ export const BodhHeritageTemplate: React.FC<BodhHeritageTemplateProps> = ({
           </div>
         </div>
       )}
-
-      {/* Dedicated Cinematic Animated E-Invite Experience Modal */}
-      <CinematicInviteExperience
-        data={data}
-        isOpen={internalCinematicOpen}
-        onClose={() => setInternalCinematicOpen(false)}
-      />
     </div>
   );
 };
